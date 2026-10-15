@@ -44,10 +44,11 @@
                     </div>
 
                     <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                        <a href="/books/add-to-cart/<%= book._id %>" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-lg transition">
+                        <% const detailBookRefId = book._id || encodeURIComponent(book.name || book.title || '1'); %>
+                        <a href="/books/add-to-cart/<%= detailBookRefId %>" class="flex-1 text-center bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-5 rounded-lg transition">
                             Add to Cart
                         </a>
-                        <a href="/books/buy/<%= book._id %>" class="flex-1 text-center bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3 px-5 rounded-lg transition shadow-md">
+                        <a href="/books/buy/<%= detailBookRefId %>" class="flex-1 text-center bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-3 px-5 rounded-lg transition shadow-md">
                             Buy Now
                         </a>
                     </div>

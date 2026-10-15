@@ -187,7 +187,8 @@
                         
                         <!-- Book Cover Container -->
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
-                            <a href="/books/buy/<%= book._id %>" class="h-full w-full flex items-center justify-center" title="<%= book.name || book.title %>">
+                            <% const bookRefId = book._id || encodeURIComponent(book.name || book.title || '1'); %>
+                            <a href="/books/buy/<%= bookRefId %>" class="h-full w-full flex items-center justify-center" title="<%= book.name || book.title %>">
                                 <img 
                                     src="/<%= book.image %>" 
                                     alt="<%= book.name || book.title || 'Book cover' %>"
@@ -244,7 +245,7 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     
                                     <!-- Add to Cart Button -->
-                                    <a href="/books/add-to-cart/<%= book._id %>" 
+                                    <a href="/books/add-to-cart/<%= bookRefId %>" 
                                        class="add-to-cart-btn text-center py-2.5 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95"
                                        title="Add to Shopping Cart">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -254,7 +255,7 @@
                                     </a>
 
                                     <!-- Buy Now Button -->
-                                    <a href="/books/buy/<%= book._id %>" 
+                                    <a href="/books/buy/<%= bookRefId %>" 
                                        class="text-center py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-1.5 active:scale-95"
                                        title="Buy Now - Go straight to Cart & Checkout">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

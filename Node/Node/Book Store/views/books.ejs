@@ -76,9 +76,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
                 <div class="max-w-2xl">
-                    <span class="inline-block text-xs font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-400/20 px-3 py-1 rounded-full mb-3">
-                        ⚡ Complete Catalog
-                    </span>
                     <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
                         Explore Our Books
                     </h1>
@@ -190,7 +187,8 @@
                         
                         <!-- Book Cover Container -->
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
-                            <a href="/books/edit/<%= book._id %>" class="h-full w-full flex items-center justify-center" title="Click to edit or view">
+                            <% const bookRefId = book._id || encodeURIComponent(book.name || book.title || '1'); %>
+                            <a href="/books/buy/<%= bookRefId %>" class="h-full w-full flex items-center justify-center" title="<%= book.name || book.title %>">
                                 <img 
                                     src="/<%= book.image %>" 
                                     alt="<%= book.name || book.title || 'Book cover' %>"
@@ -204,15 +202,6 @@
                             <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100 shadow-xs">
                                 <%= book.category || 'General' %>
                             </span>
-
-                            <!-- Edit Quick Button -->
-                            <a href="/books/edit/<%= book._id %>" 
-                               class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 hover:bg-white text-gray-600 hover:text-indigo-600 shadow-xs flex items-center justify-center transition" 
-                               title="Edit Book Details">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                                </svg>
-                            </a>
                         </div>
 
                         <!-- Card Body -->
@@ -256,7 +245,7 @@
                                 <div class="grid grid-cols-2 gap-2">
                                     
                                     <!-- Add to Cart Button -->
-                                    <a href="/books/add-to-cart/<%= book._id %>" 
+                                    <a href="/books/add-to-cart/<%= bookRefId %>" 
                                        class="add-to-cart-btn text-center py-2.5 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1.5 active:scale-95"
                                        title="Add to Shopping Cart">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -266,7 +255,7 @@
                                     </a>
 
                                     <!-- Buy Now Button -->
-                                    <a href="/books/buy/<%= book._id %>" 
+                                    <a href="/books/buy/<%= bookRefId %>" 
                                        class="text-center py-2.5 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md shadow-amber-500/20 transition flex items-center justify-center gap-1.5 active:scale-95"
                                        title="Buy Now - Go straight to Cart & Checkout">
                                         <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
