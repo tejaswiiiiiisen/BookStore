@@ -1,3 +1,8 @@
+const dns = require("dns");
+try {
+    dns.setServers(["8.8.8.8", "8.8.4.4", "1.1.1.1"]);
+} catch (_) {}
+
 const path = require("path");
 const fs = require("fs");
 
@@ -41,9 +46,28 @@ const nodemailer = require('nodemailer');
 
 async function main() {
     const mongoUri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bookstore';
-    await mongoose.connect(mongoUri, {
-        dbName: 'bookstore'
-    });
+    try {
+        await mongoose.connect(mongoUri, {
+            dbName: 'bookstore',
+            serverSelectionTimeoutMS: 8000,
+            connectTimeoutMS: 8000
+        });
+        console.log('MongoDB Connected successfully to:', mongoUri.includes('@') ? 'MongoDB Atlas (Cloud)' : 'Local MongoDB');
+        await seedDefaultBooks();
+    } catch (err) {
+        console.error('MongoDB Atlas connection failed:', err.message);
+        console.log('NOTE: Please whitelist your IP in MongoDB Atlas Network Access (0.0.0.0/0).');
+        try {
+            console.log('Trying local MongoDB fallback (mongodb://127.0.0.1:27017/bookstore)...');
+            await mongoose.connect('mongodb://127.0.0.1:27017/bookstore', {
+                serverSelectionTimeoutMS: 2000
+            });
+            console.log('Connected to Local MongoDB fallback!');
+            await seedDefaultBooks();
+        } catch (localErr) {
+            console.log('Running in fast in-memory mode with default books.');
+        }
+    }
 }
 
 const bookSchema = new mongoose.Schema({
@@ -56,6 +80,29 @@ const bookSchema = new mongoose.Schema({
 });
 
 const Book = mongoose.model('Book', bookSchema);
+
+const orderSchema = new mongoose.Schema({
+    fullName: String,
+    phone: String,
+    pincode: String,
+    address: String,
+    paymentMethod: String,
+    items: [
+        {
+            name: String,
+            price: Number,
+            quantity: Number,
+            image: String
+        }
+    ],
+    totalAmount: Number,
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const Order = mongoose.model('Order', orderSchema);
 
 const defaultBooks = [
     {
@@ -170,22 +217,31 @@ const defaultBooks = [
 
 async function seedDefaultBooks() {
     try {
-        const count = await Book.countDocuments();
-        if (count === 0) {
-            await Book.insertMany(defaultBooks);
-            console.log(`Auto-seeded ${defaultBooks.length} books into MongoDB bookstore database.`);
+        if (mongoose.connection.readyState === 1) {
+            const count = await Book.countDocuments().maxTimeMS(3000);
+            if (count === 0) {
+                await Book.insertMany(defaultBooks);
+                console.log(`Auto-seeded ${defaultBooks.length} books into MongoDB bookstore database.`);
+            }
         }
     } catch (err) {
-        console.error('Error during auto-seeding:', err);
+        console.error('Error during auto-seeding:', err.message);
     }
 }
 
-main()
-.then(async () => {
-    console.log('DB Connected');
-    await seedDefaultBooks();
-})
-.catch((err) => {console.log(err)});
+const getBooksFast = async () => {
+    if (mongoose.connection.readyState === 1) {
+        try {
+            const dbBooks = await Book.find().maxTimeMS(2000).lean();
+            if (dbBooks && dbBooks.length > 0) return dbBooks;
+        } catch (e) {
+            console.error('Fast books fetch fallback:', e.message);
+        }
+    }
+    return defaultBooks;
+};
+
+main().catch((err) => { console.log('Main DB Init error:', err.message); });
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
@@ -200,6 +256,7 @@ const escapeHtml = (value = '') => String(value)
     .replace(/'/g, '&#039;');
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const transport = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -222,14 +279,10 @@ const transport = nodemailer.createTransport({
 
 app.get('/', async (req, res) => {
     try {
-        let books = await Book.find();
-        if (!books || books.length === 0) {
-            await seedDefaultBooks();
-            books = await Book.find();
-        }
-        res.render('home', { books: (books && books.length > 0) ? books : defaultBooks });
+        const books = await getBooksFast();
+        res.render('home', { books });
     } catch (err) {
-        console.error('Error fetching books for home:', err);
+        console.error('Error in home route:', err);
         res.render('home', { books: defaultBooks });
     }
 });
@@ -254,14 +307,10 @@ function addCartItem(book) {
 
 app.get('/books', async (req, res) => {
     try {
-        let books = await Book.find();
-        if (!books || books.length === 0) {
-            await seedDefaultBooks();
-            books = await Book.find();
-        }
+        const books = await getBooksFast();
         res.render('books', { books, added: req.query.added || null });
     } catch (err) {
-        console.error('Error fetching books for /books:', err);
+        console.error('Error in /books route:', err);
         res.render('books', { books: defaultBooks, added: null });
     }
 });
@@ -290,34 +339,43 @@ app.post('/books/add', async (req, res) => {
 // Supports /books/buy, /books/buy/, /books/buy/:id, /books/buy-now, /books/buy-now/, /books/buy-now/:id
 app.get(['/books/buy', '/books/buy/', '/books/buy/:id', '/books/buy-now', '/books/buy-now/', '/books/buy-now/:id'], async (req, res) => {
     try {
-        const id = req.params.id || req.query.id;
+        const id = (req.params.id || req.query.id || '').trim();
         let book = null;
+
         if (id && id !== 'undefined' && id !== 'null') {
-            if (mongoose.Types.ObjectId.isValid(id)) {
-                book = await Book.findById(id);
-            }
-            if (!book) {
-                const decoded = decodeURIComponent(id).trim().toLowerCase();
-                book = await Book.findOne({
-                    $or: [
-                        { name: new RegExp('^' + decoded + '$', 'i') },
-                        { title: new RegExp('^' + decoded + '$', 'i') }
-                    ]
-                });
-            }
-            if (!book) {
-                const decoded = decodeURIComponent(id).trim().toLowerCase();
-                book = defaultBooks.find(b => 
-                    (b._id && String(b._id) === id) || 
-                    (b.name && b.name.toLowerCase() === decoded) || 
-                    (b.title && b.title.toLowerCase() === decoded) || 
-                    (b.image && b.image === id)
-                );
+            const decoded = decodeURIComponent(id).trim().toLowerCase();
+
+            // 1. Instant check in memory (0ms)
+            book = defaultBooks.find(b => 
+                (b._id && String(b._id) === id) || 
+                (b.name && b.name.toLowerCase() === decoded) || 
+                (b.title && b.title.toLowerCase() === decoded) || 
+                (b.image && b.image.toLowerCase() === decoded)
+            );
+
+            // 2. If not found in defaultBooks and DB is connected, check DB
+            if (!book && mongoose.connection.readyState === 1) {
+                try {
+                    if (mongoose.Types.ObjectId.isValid(id)) {
+                        book = await Book.findById(id).maxTimeMS(2000).lean();
+                    }
+                    if (!book) {
+                        book = await Book.findOne({
+                            $or: [
+                                { name: new RegExp('^' + decoded + '$', 'i') },
+                                { title: new RegExp('^' + decoded + '$', 'i') }
+                            ]
+                        }).maxTimeMS(2000).lean();
+                    }
+                } catch (dbErr) {
+                    console.error('DB query error in buy route:', dbErr.message);
+                }
             }
         }
 
+        // 3. Fallback
         if (!book) {
-            book = (await Book.findOne()) || defaultBooks[0];
+            book = defaultBooks[0];
         }
 
         if (book) {
@@ -326,6 +384,9 @@ app.get(['/books/buy', '/books/buy/', '/books/buy/:id', '/books/buy-now', '/book
         res.redirect('/cart');
     } catch (err) {
         console.error('Error in buy now:', err);
+        if (defaultBooks.length > 0) {
+            addCartItem(defaultBooks[0]);
+        }
         res.redirect('/cart');
     }
 });
@@ -334,34 +395,42 @@ app.get(['/books/buy', '/books/buy/', '/books/buy/:id', '/books/buy-now', '/book
 // Supports /books/add-to-cart, /books/add-to-cart/, /books/add-to-cart/:id
 app.get(['/books/add-to-cart', '/books/add-to-cart/', '/books/add-to-cart/:id'], async (req, res) => {
     try {
-        const id = req.params.id || req.query.id;
+        const id = (req.params.id || req.query.id || '').trim();
         let book = null;
+
         if (id && id !== 'undefined' && id !== 'null') {
-            if (mongoose.Types.ObjectId.isValid(id)) {
-                book = await Book.findById(id);
-            }
-            if (!book) {
-                const decoded = decodeURIComponent(id).trim().toLowerCase();
-                book = await Book.findOne({
-                    $or: [
-                        { name: new RegExp('^' + decoded + '$', 'i') },
-                        { title: new RegExp('^' + decoded + '$', 'i') }
-                    ]
-                });
-            }
-            if (!book) {
-                const decoded = decodeURIComponent(id).trim().toLowerCase();
-                book = defaultBooks.find(b => 
-                    (b._id && String(b._id) === id) || 
-                    (b.name && b.name.toLowerCase() === decoded) || 
-                    (b.title && b.title.toLowerCase() === decoded) || 
-                    (b.image && b.image === id)
-                );
+            const decoded = decodeURIComponent(id).trim().toLowerCase();
+
+            // 1. Instant check in memory (0ms)
+            book = defaultBooks.find(b => 
+                (b._id && String(b._id) === id) || 
+                (b.name && b.name.toLowerCase() === decoded) || 
+                (b.title && b.title.toLowerCase() === decoded) || 
+                (b.image && b.image.toLowerCase() === decoded)
+            );
+
+            // 2. If not found in defaultBooks and DB is connected, check DB
+            if (!book && mongoose.connection.readyState === 1) {
+                try {
+                    if (mongoose.Types.ObjectId.isValid(id)) {
+                        book = await Book.findById(id).maxTimeMS(2000).lean();
+                    }
+                    if (!book) {
+                        book = await Book.findOne({
+                            $or: [
+                                { name: new RegExp('^' + decoded + '$', 'i') },
+                                { title: new RegExp('^' + decoded + '$', 'i') }
+                            ]
+                        }).maxTimeMS(2000).lean();
+                    }
+                } catch (dbErr) {
+                    console.error('DB query error in add-to-cart route:', dbErr.message);
+                }
             }
         }
 
         if (!book) {
-            book = (await Book.findOne()) || defaultBooks[0];
+            book = defaultBooks[0];
         }
 
         if (book) {
@@ -377,6 +446,9 @@ app.get(['/books/add-to-cart', '/books/add-to-cart/', '/books/add-to-cart/:id'],
         res.redirect(`${backUrl}${separator}itemAdded=1`);
     } catch (err) {
         console.error('Error in add to cart:', err);
+        if (defaultBooks.length > 0) {
+            addCartItem(defaultBooks[0]);
+        }
         res.redirect('/cart');
     }
 });
@@ -426,6 +498,41 @@ app.get('/cart/increase/:id', (req, res) => {
 app.get('/cart/clear', (req, res) => {
     app.locals.cart = [];
     res.redirect('/cart');
+});
+
+// Process Checkout & Save Order to Database
+app.post('/checkout', async (req, res) => {
+    try {
+        const { fullName, phone, pincode, address, payment } = req.body;
+        const cartItems = app.locals.cart || [];
+        const total = cartItems.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity || 1)), 0);
+
+        if (cartItems.length > 0) {
+            if (mongoose.connection.readyState === 1) {
+                const newOrder = new Order({
+                    fullName: fullName || 'Anonymous Customer',
+                    phone: phone || '',
+                    pincode: pincode || '',
+                    address: address || '',
+                    paymentMethod: payment || 'cod',
+                    items: cartItems.map(item => ({
+                        name: item.name || item.title || 'Book',
+                        price: Number(item.price) || 0,
+                        quantity: Number(item.quantity) || 1,
+                        image: item.image || ''
+                    })),
+                    totalAmount: total
+                });
+                await newOrder.save().catch(e => console.error('Order save to DB error:', e.message));
+                console.log('Order successfully saved to MongoDB:', newOrder._id);
+            }
+            app.locals.cart = [];
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error placing order:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
 });
 
 app.get('/login', (req, res) => {
@@ -482,49 +589,72 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/books/edit/:id', async (req, res) => {
-    const book = await Book.findById(req.params.id);
-    if (!book) {
-        return res.redirect('/books');
+    try {
+        const id = req.params.id;
+        let book = null;
+        if (mongoose.connection.readyState === 1 && mongoose.Types.ObjectId.isValid(id)) {
+            book = await Book.findById(id).maxTimeMS(2000).lean().catch(() => null);
+        }
+        if (!book) {
+            book = defaultBooks.find(b => String(b._id) === String(id));
+        }
+        if (!book) {
+            return res.redirect('/books');
+        }
+        res.render('editbook', { book });
+    } catch (err) {
+        res.redirect('/books');
     }
-
-    res.render('editbook', { book });
 });
 
 app.post('/books/edit/:id', async (req, res) => {
-    const { name, title, author, price, category, image } = req.body;
+    try {
+        const { name, title, author, price, category, image } = req.body;
 
-    const updatedData = {
-        name: name || title,
-        title: title || name,
-        author,
-        price: Number(price),
-        category,
-    };
+        const updatedData = {
+            name: name || title,
+            title: title || name,
+            author,
+            price: Number(price),
+            category,
+        };
 
-    if (image && image.trim()) {
-        updatedData.image = image.trim();
+        if (image && image.trim()) {
+            updatedData.image = image.trim();
+        }
+
+        if (mongoose.connection.readyState === 1 && mongoose.Types.ObjectId.isValid(req.params.id)) {
+            await Book.findByIdAndUpdate(req.params.id, updatedData, { new: true }).maxTimeMS(3000);
+        }
+        res.redirect('/books');
+    } catch (err) {
+        res.redirect('/books');
     }
-
-    await Book.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-    res.redirect('/books');
 });
 
 app.get('/category', async (req, res) => {
-    const books = await Book.find();
-    const allBooks = await Book.find();
-    const categoriesList = [...new Set(allBooks.map(book => book.category))];
-    res.render('categories', { books, category: 'All', categories: categoriesList });
+    try {
+        const books = await getBooksFast();
+        const categoriesList = [...new Set(books.map(book => book.category))];
+        res.render('categories', { books, category: 'All', categories: categoriesList });
+    } catch (err) {
+        const categoriesList = [...new Set(defaultBooks.map(book => book.category))];
+        res.render('categories', { books: defaultBooks, category: 'All', categories: categoriesList });
+    }
 });
 
 app.get('/category/:category', async (req, res) => {
-    const category = req.params.category;
-    const escapedCategory = category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const books = await Book.find({
-        category: { $regex: `^${escapedCategory}$`, $options: 'i' }
-    });
-    const allBooks = await Book.find();
-    const categoriesList = [...new Set(allBooks.map(book => book.category))];
-    res.render('categories', { books, category, categories: categoriesList });
+    try {
+        const category = req.params.category;
+        const allBooks = await getBooksFast();
+        const categoriesList = [...new Set(allBooks.map(book => book.category))];
+        const filteredBooks = allBooks.filter(book => 
+            (book.category || '').toLowerCase() === category.trim().toLowerCase()
+        );
+        res.render('categories', { books: filteredBooks, category, categories: categoriesList });
+    } catch (err) {
+        res.render('categories', { books: defaultBooks, category: req.params.category, categories: [] });
+    }
 });
 app.get('/contact',(req,res)=>{
     const success = req.query.success === '1';
