@@ -59,6 +59,7 @@ const Book = mongoose.model('Book', bookSchema);
 
 const defaultBooks = [
     {
+        _id: "650000000000000000000001",
         name: "Atomic Habits",
         title: "Atomic Habits",
         author: "James Clear",
@@ -67,6 +68,7 @@ const defaultBooks = [
         image: "img1.png"
     },
     {
+        _id: "650000000000000000000002",
         name: "Rich Dad Poor Dad",
         title: "Rich Dad Poor Dad",
         author: "Robert T. Kiyosaki",
@@ -75,6 +77,7 @@ const defaultBooks = [
         image: "img2.jpg"
     },
     {
+        _id: "650000000000000000000003",
         name: "The Hobbit",
         title: "The Hobbit",
         author: "J.R.R. Tolkien",
@@ -83,6 +86,7 @@ const defaultBooks = [
         image: "img3.png"
     },
     {
+        _id: "650000000000000000000004",
         name: "The Psychology of Money",
         title: "The Psychology of Money",
         author: "Morgan Housel",
@@ -91,6 +95,7 @@ const defaultBooks = [
         image: "img4.png"
     },
     {
+        _id: "650000000000000000000005",
         name: "Think and Grow Rich",
         title: "Think and Grow Rich",
         author: "Napoleon Hill",
@@ -99,6 +104,7 @@ const defaultBooks = [
         image: "img5.png"
     },
     {
+        _id: "650000000000000000000006",
         name: "The Alchemist",
         title: "The Alchemist",
         author: "Paulo Coelho",
@@ -107,6 +113,7 @@ const defaultBooks = [
         image: "img6.png"
     },
     {
+        _id: "650000000000000000000007",
         name: "Harry Potter & Sorcerer's Stone",
         title: "Harry Potter & Sorcerer's Stone",
         author: "J.K. Rowling",
@@ -115,6 +122,7 @@ const defaultBooks = [
         image: "img7.png"
     },
     {
+        _id: "650000000000000000000008",
         name: "To Kill a Mockingbird",
         title: "To Kill a Mockingbird",
         author: "Harper Lee",
@@ -123,6 +131,7 @@ const defaultBooks = [
         image: "img8.png"
     },
     {
+        _id: "650000000000000000000009",
         name: "Sapiens: A Brief History",
         title: "Sapiens: A Brief History",
         author: "Yuval Noah Harari",
@@ -131,6 +140,7 @@ const defaultBooks = [
         image: "img9.png"
     },
     {
+        _id: "650000000000000000000010",
         name: "Clean Code",
         title: "Clean Code",
         author: "Robert C. Martin",
@@ -139,6 +149,7 @@ const defaultBooks = [
         image: "img10.png"
     },
     {
+        _id: "650000000000000000000011",
         name: "Ikigai: Japanese Secret",
         title: "Ikigai: Japanese Secret",
         author: "Héctor García",
@@ -147,6 +158,7 @@ const defaultBooks = [
         image: "img11.png"
     },
     {
+        _id: "650000000000000000000012",
         name: "The Power of Habit",
         title: "The Power of Habit",
         author: "Charles Duhigg",
@@ -275,14 +287,37 @@ app.post('/books/add', async (req, res) => {
 });
 
 // Buy Now Route: Adds book to cart and immediately redirects to Cart for checkout
-app.get(['/books/buy/:id', '/books/buy-now/:id'], async (req, res) => {
+// Supports /books/buy, /books/buy/, /books/buy/:id, /books/buy-now, /books/buy-now/, /books/buy-now/:id
+app.get(['/books/buy', '/books/buy/', '/books/buy/:id', '/books/buy-now', '/books/buy-now/', '/books/buy-now/:id'], async (req, res) => {
     try {
+        const id = req.params.id || req.query.id;
         let book = null;
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            book = await Book.findById(req.params.id);
+        if (id && id !== 'undefined' && id !== 'null') {
+            if (mongoose.Types.ObjectId.isValid(id)) {
+                book = await Book.findById(id);
+            }
+            if (!book) {
+                const decoded = decodeURIComponent(id).trim().toLowerCase();
+                book = await Book.findOne({
+                    $or: [
+                        { name: new RegExp('^' + decoded + '$', 'i') },
+                        { title: new RegExp('^' + decoded + '$', 'i') }
+                    ]
+                });
+            }
+            if (!book) {
+                const decoded = decodeURIComponent(id).trim().toLowerCase();
+                book = defaultBooks.find(b => 
+                    (b._id && String(b._id) === id) || 
+                    (b.name && b.name.toLowerCase() === decoded) || 
+                    (b.title && b.title.toLowerCase() === decoded) || 
+                    (b.image && b.image === id)
+                );
+            }
         }
+
         if (!book) {
-            book = defaultBooks.find(b => b.name === req.params.id || b.image === req.params.id) || defaultBooks[0];
+            book = (await Book.findOne()) || defaultBooks[0];
         }
 
         if (book) {
@@ -296,14 +331,37 @@ app.get(['/books/buy/:id', '/books/buy-now/:id'], async (req, res) => {
 });
 
 // Add to Cart Route: Adds book to cart and keeps user on page or redirects
-app.get('/books/add-to-cart/:id', async (req, res) => {
+// Supports /books/add-to-cart, /books/add-to-cart/, /books/add-to-cart/:id
+app.get(['/books/add-to-cart', '/books/add-to-cart/', '/books/add-to-cart/:id'], async (req, res) => {
     try {
+        const id = req.params.id || req.query.id;
         let book = null;
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            book = await Book.findById(req.params.id);
+        if (id && id !== 'undefined' && id !== 'null') {
+            if (mongoose.Types.ObjectId.isValid(id)) {
+                book = await Book.findById(id);
+            }
+            if (!book) {
+                const decoded = decodeURIComponent(id).trim().toLowerCase();
+                book = await Book.findOne({
+                    $or: [
+                        { name: new RegExp('^' + decoded + '$', 'i') },
+                        { title: new RegExp('^' + decoded + '$', 'i') }
+                    ]
+                });
+            }
+            if (!book) {
+                const decoded = decodeURIComponent(id).trim().toLowerCase();
+                book = defaultBooks.find(b => 
+                    (b._id && String(b._id) === id) || 
+                    (b.name && b.name.toLowerCase() === decoded) || 
+                    (b.title && b.title.toLowerCase() === decoded) || 
+                    (b.image && b.image === id)
+                );
+            }
         }
+
         if (!book) {
-            book = defaultBooks.find(b => b.name === req.params.id || b.image === req.params.id) || defaultBooks[0];
+            book = (await Book.findOne()) || defaultBooks[0];
         }
 
         if (book) {
