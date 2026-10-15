@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - BookStore</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Seamless Hero Dark Navy to Pure White Gradient */
+        .hero-gradient-canvas {
+            background-color: #171936;
+            background-image: 
+                radial-gradient(ellipse 70% 55% at 75% 25%, rgba(147, 51, 234, 0.22) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 45% at 20% 15%, rgba(99, 102, 241, 0.20) 0%, transparent 65%),
+                linear-gradient(
+                    180deg,
+                    #171936 0%,
+                    #171936 46%,
+                    #1a1e43 58%,
+                    #212756 68%,
+                    #2d356f 77%,
+                    #444f8e 84%,
+                    #6976b0 89.5%,
+                    #9aa6d3 93.5%,
+                    #ccd3ee 96.5%,
+                    #f3f5fb 98.8%,
+                    #ffffff 100%
+                );
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <%- include('includes/nav.ejs') %>
+
+    <!-- Hero Header Banner with Seamless Dark Navy to White Gradient -->
+    <section class="relative overflow-hidden hero-gradient-canvas text-white -mt-16 pt-28 pb-20 sm:pb-24 lg:pt-36 lg:pb-28">
+        <!-- Ambient Background Glows -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/4 right-1/4 w-[450px] h-[450px] bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 left-3/4 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Subtle Grid Pattern Overlay with bottom fade mask -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_bottom,#000_50%,transparent_85%)] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block text-xs font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-400/20 px-3 py-1 rounded-full mb-3">
+                ⚡ Curated Genres
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                Explore by Category
+            </h1>
+            <p class="text-slate-300 mt-3 text-sm sm:text-base max-w-xl mx-auto">
+                Find your favorite books organized by genre. Select a category below to discover amazing reads.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content Section on Pure White -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white">
+        
+        <%
+            const selectedCategory = typeof category !== 'undefined' ? category : 'All';
+            const categoryLinks = ['All', 'Self learning', 'Fantasy', 'Fiction', 'Technology', 'Classic', 'History'];
+        %>
+
+        <!-- Category Filter Pills -->
+        <div class="mb-10 flex flex-wrap gap-2.5 justify-center">
+            <% categoryLinks.forEach(cat => { %>
+                <% const href = cat === 'All' ? '/category' : `/category/${encodeURIComponent(cat)}`; %>
+                <% const isActive = selectedCategory.toLowerCase() === cat.toLowerCase(); %>
+                <a href="<%= href %>"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs <%= isActive ? 'bg-indigo-600 text-white shadow-indigo-500/20 scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600' %>">
+                    <%= cat %>
+                </a>
+            <% }) %>
+        </div>
+
+        <!-- Books Grid for Categories -->
+        <% if (books && books.length) { %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <% books.forEach(book => { %>
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="/<%= book.image %>"
+                                 alt="<%= book.name || book.title || 'Book cover' %>"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='/img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                <%= book.category || 'General' %>
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    <%= book.author ? `by ${book.author}` : 'Bestselling Author' %>
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    <%= book.name || book.title %>
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹<%= book.price %></span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹<%= Math.round(Number(book.price || 0) * 1.25) %></span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="/books/add-to-cart/<%= book._id %>" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/<%= book._id %>" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                <% }) %>
+            </div>
+        <% } else { %>
+            <div class="bg-white rounded-3xl border border-dashed border-gray-300 p-12 text-center text-gray-600 max-w-md mx-auto">
+                <div class="text-4xl mb-3">📚</div>
+                <h3 class="text-lg font-bold text-gray-900">No books found in this category</h3>
+                <p class="text-xs text-gray-500 mt-1">Try exploring other categories or view our complete catalog.</p>
+                <a href="/category" class="inline-block mt-5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-md hover:bg-indigo-700 transition">
+                    View All Categories
+                </a>
+            </div>
+        <% } %>
+
+    </main>
+
+    <!-- Footer -->
+    <%- include('includes/footer.ejs') %>
+
+</body>
+</html>

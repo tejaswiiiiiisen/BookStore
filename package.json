@@ -1,0 +1,10 @@
+{
+  "name": "book-store-root",
+  "version": "1.0.0",
+  "description": "Book Store Project",
+  "private": true,
+  "scripts": {
+    "start": "npm --prefix \"Node/Book Store\" start",
+    "dev": "npm --prefix \"Node/Book Store\" run dev"
+  }
+}
