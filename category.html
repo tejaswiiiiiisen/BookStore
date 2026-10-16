@@ -1,0 +1,1045 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - BookStore</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        /* Seamless Hero Dark Navy to Pure White Gradient */
+        .hero-gradient-canvas {
+            background-color: #171936;
+            background-image: 
+                radial-gradient(ellipse 70% 55% at 75% 25%, rgba(147, 51, 234, 0.22) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 45% at 20% 15%, rgba(99, 102, 241, 0.20) 0%, transparent 65%),
+                linear-gradient(
+                    180deg,
+                    #171936 0%,
+                    #171936 46%,
+                    #1a1e43 58%,
+                    #212756 68%,
+                    #2d356f 77%,
+                    #444f8e 84%,
+                    #6976b0 89.5%,
+                    #9aa6d3 93.5%,
+                    #ccd3ee 96.5%,
+                    #f3f5fb 98.8%,
+                    #ffffff 100%
+                );
+        }
+    </style>
+</head>
+<body class="bg-white text-gray-900 antialiased selection:bg-indigo-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <nav id="glass-nav" class="sticky top-0 z-50 transition-all duration-300 border-b border-white/10" style="background: rgba(23, 25, 54, 0.25); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Brand Logo -->
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200 border border-white/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-extrabold bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">
+                    BookStore
+                </span>
+            </a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-1 font-semibold text-sm text-slate-200">
+                <a href="index.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Home</a>
+                <a href="books.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Books</a>
+                <a href="category.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Categories</a>
+                <a href="about.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">About</a>
+                <a href="orders.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition flex items-center gap-1.5 text-amber-300 hover:text-amber-200">
+                    <span>📦</span>
+                    <span>My Orders</span>
+                </a>
+                <a href="contact.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Contact</a>
+            </div>
+
+            <!-- Cart & User Profile Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Cart Button -->
+                <a href="cart.html" class="relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold border border-white/15 backdrop-blur-md shadow-xs transition group">
+                    <svg class="w-5 h-5 text-indigo-300 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Cart</span>
+                    
+                    
+                </a>
+
+                
+
+                <!-- User Profile Dropdown -->
+                <div class="relative" id="user-profile-menu">
+                    <button type="button" 
+                            id="profile-toggle-btn" 
+                            class="flex items-center gap-2 px-2.5 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-600/20 hover:from-indigo-500/30 hover:to-purple-500/30 text-white font-bold border border-indigo-400/30 backdrop-blur-md shadow-xs transition group cursor-pointer active:scale-95"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            title="My Account Profile">
+                        <!-- User Avatar Circle -->
+                        <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-xs">
+                            T
+                        </div>
+                        <span class="hidden sm:inline text-xs font-bold text-slate-100">Tejaswi</span>
+                        <svg class="w-3.5 h-3.5 text-slate-300 group-hover:text-white transition-transform duration-200" id="profile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Profile Dropdown Card -->
+                    <div id="profile-dropdown" 
+                         class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/15 shadow-2xl text-white p-4 z-50 transform origin-top-right transition-all duration-200">
+                        
+                        <!-- User Profile Header -->
+                        <div class="flex items-center gap-3 pb-3 border-b border-white/10">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-lg shadow-md border border-white/20">
+                                T
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="text-sm font-bold text-white truncate">Tejaswi</h4>
+                                    <span class="bg-emerald-500/20 text-emerald-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-500/30 uppercase">Active</span>
+                                </div>
+                                <p class="text-xs text-slate-400 truncate">tejaswi@bookstore.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Profile Navigation Links -->
+                        <div class="py-2.5 space-y-1 text-xs">
+                            <a href="orders.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>📦</span> My Orders
+                                </span>
+                                <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/25">Track</span>
+                            </a>
+                            <a href="books.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>📚</span> Browse Catalog
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-semibold">Catalog</span>
+                            </a>
+                            <a href="contact.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>💬</span> Customer Support
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-semibold">24/7</span>
+                            </a>
+                        </div>
+
+                        <!-- Logout Action Button inside Dropdown -->
+                        <div class="pt-2 border-t border-white/10">
+                            <a href="/logout" 
+                               class="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 active:scale-95 text-rose-300 hover:text-rose-100 font-bold text-xs border border-rose-500/25 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Subbar -->
+    <div class="md:hidden flex items-center justify-around border-t border-white/10 py-2.5 px-3 bg-[#171936]/60 backdrop-blur-xl text-xs font-semibold text-slate-200">
+        <a href="index.html" class="hover:text-white py-1">Home</a>
+        <a href="books.html" class="hover:text-white py-1">Books</a>
+        <a href="category.html" class="hover:text-white py-1">Categories</a>
+        <a href="contact.html" class="hover:text-white py-1">Contact</a>
+        <a href="orders.html" class="hover:text-amber-300 text-amber-200 py-1 font-bold">Orders</a>
+        <a href="cart.html" class="hover:text-white py-1">Cart</a>
+    </div>
+</nav>
+
+<script>
+    (function() {
+        const nav = document.getElementById('glass-nav');
+        if (nav) {
+            function updateNavGlass() {
+                if (window.scrollY > 25) {
+                    nav.style.background = 'rgba(23, 25, 54, 0.75)';
+                    nav.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    nav.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.4)';
+                } else {
+                    nav.style.background = 'rgba(23, 25, 54, 0.25)';
+                    nav.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    nav.style.boxShadow = 'none';
+                }
+            }
+            window.addEventListener('scroll', updateNavGlass, { passive: true });
+            updateNavGlass();
+        }
+
+        // User Profile Dropdown Interactions
+        const profileBtn = document.getElementById('profile-toggle-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const profileChevron = document.getElementById('profile-chevron');
+
+        if (profileBtn && profileDropdown) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = profileDropdown.classList.contains('hidden');
+                if (isHidden) {
+                    profileDropdown.classList.remove('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(180deg)';
+                } else {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+
+        // Show toast notifications for login and logout
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logged_out')) {
+            const toast = document.getElementById('logout-toast');
+            if (toast) {
+                toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }, 3500);
+            }
+        } else if (urlParams.has('logged_in')) {
+            const loginToast = document.getElementById('login-toast');
+            if (loginToast) {
+                loginToast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                loginToast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    loginToast.classList.remove('translate-y-0', 'opacity-100');
+                    loginToast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }, 3500);
+            }
+        }
+    })();
+</script>
+
+<!-- Floating Logout Confirmation Toast -->
+<div id="logout-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-white/20 shadow-2xl backdrop-blur-xl">
+        <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">✓</span>
+        <div>
+            <p class="text-xs font-bold text-white">Logged Out</p>
+            <p class="text-[11px] text-slate-400">You have been signed out successfully.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Login Success Toast -->
+<div id="login-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-emerald-500/30 shadow-2xl backdrop-blur-xl">
+        <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">🎉</span>
+        <div>
+            <p class="text-xs font-bold text-white">Welcome Back!</p>
+            <p class="text-[11px] text-slate-300">You are successfully logged in.</p>
+        </div>
+    </div>
+</div>
+
+    <!-- Hero Header Banner with Seamless Dark Navy to White Gradient -->
+    <section class="relative overflow-hidden hero-gradient-canvas text-white -mt-16 pt-28 pb-20 sm:pb-24 lg:pt-36 lg:pb-28">
+        <!-- Ambient Background Glows -->
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/4 right-1/4 w-[450px] h-[450px] bg-purple-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 left-3/4 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Subtle Grid Pattern Overlay with bottom fade mask -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_bottom,#000_50%,transparent_85%)] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block text-xs font-extrabold uppercase tracking-widest text-indigo-400 bg-indigo-500/10 border border-indigo-400/20 px-3 py-1 rounded-full mb-3">
+                ⚡ Curated Genres
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                Explore by Category
+            </h1>
+            <p class="text-slate-300 mt-3 text-sm sm:text-base max-w-xl mx-auto">
+                Find your favorite books organized by genre. Select a category below to discover amazing reads.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content Section on Pure White -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 bg-white">
+        
+        
+
+        <!-- Category Filter Pills -->
+        <div class="mb-10 flex flex-wrap gap-2.5 justify-center">
+            
+                
+                
+                <a href="category.html"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-indigo-600 text-white shadow-indigo-500/20 scale-105">
+                    All
+                </a>
+            
+                
+                
+                <a href="/category/Self%20learning"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    Self learning
+                </a>
+            
+                
+                
+                <a href="/category/Fantasy"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    Fantasy
+                </a>
+            
+                
+                
+                <a href="/category/Fiction"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    Fiction
+                </a>
+            
+                
+                
+                <a href="/category/Technology"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    Technology
+                </a>
+            
+                
+                
+                <a href="/category/Classic"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    Classic
+                </a>
+            
+                
+                
+                <a href="/category/History"
+                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
+                    History
+                </a>
+            
+        </div>
+
+        <!-- Books Grid for Categories -->
+        
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img1.png"
+                                 alt="Atomic Habits"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by James Clear
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Atomic Habits
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹499</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹624</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000001" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000001" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img2.jpg"
+                                 alt="Rich Dad Poor Dad"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Robert T. Kiyosaki
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Rich Dad Poor Dad
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹399</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹499</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000002" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000002" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img3.png"
+                                 alt="The Hobbit"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Fantasy
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by J.R.R. Tolkien
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    The Hobbit
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹599</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹749</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000003" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000003" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img4.png"
+                                 alt="The Psychology of Money"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Morgan Housel
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    The Psychology of Money
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹450</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹563</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000004" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000004" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img5.png"
+                                 alt="Think and Grow Rich"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Napoleon Hill
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Think and Grow Rich
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹350</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹438</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000005" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000005" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img6.png"
+                                 alt="The Alchemist"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Fiction
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Paulo Coelho
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    The Alchemist
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹299</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹374</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000006" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000006" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img7.png"
+                                 alt="Harry Potter &amp; Sorcerer&#39;s Stone"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Fantasy
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by J.K. Rowling
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Harry Potter &amp; Sorcerer&#39;s Stone
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹699</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹874</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000007" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000007" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img8.png"
+                                 alt="To Kill a Mockingbird"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Classic
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Harper Lee
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    To Kill a Mockingbird
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹399</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹499</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000008" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000008" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img9.png"
+                                 alt="Sapiens: A Brief History"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                History
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Yuval Noah Harari
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Sapiens: A Brief History
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹599</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹749</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000009" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000009" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img10.png"
+                                 alt="Clean Code"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Technology
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Robert C. Martin
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Clean Code
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹899</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹1124</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000010" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000010" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img11.png"
+                                 alt="Ikigai: Japanese Secret"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Héctor García
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    Ikigai: Japanese Secret
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹420</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹525</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000011" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000011" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                        
+                        <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
+                            <img src="./img12.png"
+                                 alt="The Power of Habit"
+                                 class="h-full w-auto max-w-full object-contain drop-shadow-md hover:scale-105 transition-transform duration-300"
+                                 onerror="this.src='./img1.png'">
+                            
+                            <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-indigo-700 text-[10px] font-extrabold px-2.5 py-1 rounded-lg border border-gray-100">
+                                Self learning
+                            </span>
+                        </div>
+
+                        <div class="p-5 flex-1 flex flex-col justify-between">
+                            <div>
+                                <p class="text-xs font-semibold text-gray-400 mb-1">
+                                    by Charles Duhigg
+                                </p>
+                                <h2 class="text-base font-bold text-gray-900 line-clamp-1 mb-2">
+                                    The Power of Habit
+                                </h2>
+                                <div class="flex items-center gap-1.5">
+                                    <span class="text-amber-400 text-xs">★★★★★</span>
+                                    <span class="text-[11px] font-semibold text-gray-500">4.9</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-4 border-t border-gray-100">
+                                <div class="flex items-baseline justify-between mb-3.5">
+                                    <div>
+                                        <span class="text-xl font-extrabold text-indigo-600">₹480</span>
+                                        <span class="text-xs text-gray-400 line-through ml-1.5">₹600</span>
+                                    </div>
+                                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">In Stock</span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    
+                                    <a href="/books/add-to-cart/650000000000000000000012" 
+                                       class="text-center py-2 px-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Add to Cart</span>
+                                    </a>
+                                    <a href="/books/buy/650000000000000000000012" 
+                                       class="text-center py-2 px-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1 active:scale-95">
+                                        <span>Buy Now</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                
+            </div>
+        
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 mt-20 border-t border-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20">
+                        📚
+                    </div>
+                    <span class="text-xl font-extrabold text-white">BookStore</span>
+                </div>
+                <p class="text-sm text-slate-400 max-w-sm">
+                    Your premier online sanctuary for bestselling books, self-growth literature, fantasy epics, and timeless academic classics.
+                </p>
+                <div class="flex gap-4 pt-2">
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">IG</span>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">FB</span>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">X</span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+                <ul class="space-y-2.5 text-sm">
+                    <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                    <li><a href="books.html" class="hover:text-white transition">All Books</a></li>
+                    <li><a href="category.html" class="hover:text-white transition">Categories</a></li>
+                    <li><a href="cart.html" class="hover:text-white transition">Shopping Cart</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Support & About</h4>
+                <ul class="space-y-2.5 text-sm">
+                    <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Shipping Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+            <p>© 2026 BookStore Inc. All rights reserved.</p>
+            <p>Designed for passionate readers.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="./store.js"></script></body>
+</html>

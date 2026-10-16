@@ -1,0 +1,582 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - BookStore</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Rich Dark Navy & Purple Header Gradient */
+        .cart-hero-gradient {
+            background-color: #171936;
+            background-image: 
+                radial-gradient(ellipse 75% 55% at 75% 20%, rgba(57, 32, 111, 0.45) 0%, transparent 70%),
+                radial-gradient(ellipse 65% 50% at 20% 15%, rgba(67, 56, 202, 0.25) 0%, transparent 65%),
+                linear-gradient(
+                    180deg,
+                    #171936 0%,
+                    #171936 45%,
+                    #1f2656 70%,
+                    #2d3775 88%,
+                    #3f4e9a 100%
+                );
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased selection:bg-indigo-500 selection:text-white flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <nav id="glass-nav" class="sticky top-0 z-50 transition-all duration-300 border-b border-white/10" style="background: rgba(23, 25, 54, 0.25); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Brand Logo -->
+            <a href="index.html" class="flex items-center gap-2.5 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-blue-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition-transform duration-200 border border-white/20">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <span class="text-xl font-extrabold bg-gradient-to-r from-white via-indigo-100 to-indigo-300 bg-clip-text text-transparent">
+                    BookStore
+                </span>
+            </a>
+
+            <!-- Nav Links -->
+            <div class="hidden md:flex items-center gap-1 font-semibold text-sm text-slate-200">
+                <a href="index.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Home</a>
+                <a href="books.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Books</a>
+                <a href="category.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Categories</a>
+                <a href="about.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">About</a>
+                <a href="orders.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition flex items-center gap-1.5 text-amber-300 hover:text-amber-200">
+                    <span>📦</span>
+                    <span>My Orders</span>
+                </a>
+                <a href="contact.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Contact</a>
+            </div>
+
+            <!-- Cart & User Profile Actions -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Cart Button -->
+                <a href="cart.html" class="relative flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold border border-white/15 backdrop-blur-md shadow-xs transition group">
+                    <svg class="w-5 h-5 text-indigo-300 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <span class="hidden sm:inline">Cart</span>
+                    
+                    
+                </a>
+
+                
+
+                <!-- User Profile Dropdown -->
+                <div class="relative" id="user-profile-menu">
+                    <button type="button" 
+                            id="profile-toggle-btn" 
+                            class="flex items-center gap-2 px-2.5 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-600/20 hover:from-indigo-500/30 hover:to-purple-500/30 text-white font-bold border border-indigo-400/30 backdrop-blur-md shadow-xs transition group cursor-pointer active:scale-95"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            title="My Account Profile">
+                        <!-- User Avatar Circle -->
+                        <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-amber-400 to-orange-500 flex items-center justify-center text-slate-950 font-black text-xs shadow-xs">
+                            T
+                        </div>
+                        <span class="hidden sm:inline text-xs font-bold text-slate-100">Tejaswi</span>
+                        <svg class="w-3.5 h-3.5 text-slate-300 group-hover:text-white transition-transform duration-200" id="profile-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+
+                    <!-- Profile Dropdown Card -->
+                    <div id="profile-dropdown" 
+                         class="hidden absolute right-0 mt-2 w-64 rounded-2xl bg-slate-900/95 backdrop-blur-2xl border border-white/15 shadow-2xl text-white p-4 z-50 transform origin-top-right transition-all duration-200">
+                        
+                        <!-- User Profile Header -->
+                        <div class="flex items-center gap-3 pb-3 border-b border-white/10">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-black text-lg shadow-md border border-white/20">
+                                T
+                            </div>
+                            <div class="overflow-hidden">
+                                <div class="flex items-center gap-1.5">
+                                    <h4 class="text-sm font-bold text-white truncate">Tejaswi</h4>
+                                    <span class="bg-emerald-500/20 text-emerald-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-500/30 uppercase">Active</span>
+                                </div>
+                                <p class="text-xs text-slate-400 truncate">tejaswi@bookstore.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Profile Navigation Links -->
+                        <div class="py-2.5 space-y-1 text-xs">
+                            <a href="orders.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>📦</span> My Orders
+                                </span>
+                                <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/15 px-2 py-0.5 rounded-md border border-emerald-500/25">Track</span>
+                            </a>
+                            <a href="books.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>📚</span> Browse Catalog
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-semibold">Catalog</span>
+                            </a>
+                            <a href="contact.html" class="flex items-center justify-between px-3 py-2 rounded-xl text-slate-200 hover:text-white hover:bg-white/10 transition">
+                                <span class="flex items-center gap-2.5">
+                                    <span>💬</span> Customer Support
+                                </span>
+                                <span class="text-[10px] text-slate-400 font-semibold">24/7</span>
+                            </a>
+                        </div>
+
+                        <!-- Logout Action Button inside Dropdown -->
+                        <div class="pt-2 border-t border-white/10">
+                            <a href="/logout" 
+                               class="flex items-center justify-center gap-2 w-full py-2.5 px-3 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 active:scale-95 text-rose-300 hover:text-rose-100 font-bold text-xs border border-rose-500/25 transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Subbar -->
+    <div class="md:hidden flex items-center justify-around border-t border-white/10 py-2.5 px-3 bg-[#171936]/60 backdrop-blur-xl text-xs font-semibold text-slate-200">
+        <a href="index.html" class="hover:text-white py-1">Home</a>
+        <a href="books.html" class="hover:text-white py-1">Books</a>
+        <a href="category.html" class="hover:text-white py-1">Categories</a>
+        <a href="contact.html" class="hover:text-white py-1">Contact</a>
+        <a href="orders.html" class="hover:text-amber-300 text-amber-200 py-1 font-bold">Orders</a>
+        <a href="cart.html" class="hover:text-white py-1">Cart</a>
+    </div>
+</nav>
+
+<script>
+    (function() {
+        const nav = document.getElementById('glass-nav');
+        if (nav) {
+            function updateNavGlass() {
+                if (window.scrollY > 25) {
+                    nav.style.background = 'rgba(23, 25, 54, 0.75)';
+                    nav.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    nav.style.boxShadow = '0 10px 30px -10px rgba(0, 0, 0, 0.4)';
+                } else {
+                    nav.style.background = 'rgba(23, 25, 54, 0.25)';
+                    nav.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+                    nav.style.boxShadow = 'none';
+                }
+            }
+            window.addEventListener('scroll', updateNavGlass, { passive: true });
+            updateNavGlass();
+        }
+
+        // User Profile Dropdown Interactions
+        const profileBtn = document.getElementById('profile-toggle-btn');
+        const profileDropdown = document.getElementById('profile-dropdown');
+        const profileChevron = document.getElementById('profile-chevron');
+
+        if (profileBtn && profileDropdown) {
+            profileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isHidden = profileDropdown.classList.contains('hidden');
+                if (isHidden) {
+                    profileDropdown.classList.remove('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(180deg)';
+                } else {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    profileDropdown.classList.add('hidden');
+                    if (profileChevron) profileChevron.style.transform = 'rotate(0deg)';
+                }
+            });
+        }
+
+        // Show toast notifications for login and logout
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('logged_out')) {
+            const toast = document.getElementById('logout-toast');
+            if (toast) {
+                toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                toast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }, 3500);
+            }
+        } else if (urlParams.has('logged_in')) {
+            const loginToast = document.getElementById('login-toast');
+            if (loginToast) {
+                loginToast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                loginToast.classList.add('translate-y-0', 'opacity-100');
+                setTimeout(() => {
+                    loginToast.classList.remove('translate-y-0', 'opacity-100');
+                    loginToast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                }, 3500);
+            }
+        }
+    })();
+</script>
+
+<!-- Floating Logout Confirmation Toast -->
+<div id="logout-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-white/20 shadow-2xl backdrop-blur-xl">
+        <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">✓</span>
+        <div>
+            <p class="text-xs font-bold text-white">Logged Out</p>
+            <p class="text-[11px] text-slate-400">You have been signed out successfully.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Floating Login Success Toast -->
+<div id="login-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-emerald-500/30 shadow-2xl backdrop-blur-xl">
+        <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">🎉</span>
+        <div>
+            <p class="text-xs font-bold text-white">Welcome Back!</p>
+            <p class="text-[11px] text-slate-300">You are successfully logged in.</p>
+        </div>
+    </div>
+</div>
+
+    
+
+    <!-- Hero Header Banner -->
+    <section class="relative overflow-hidden cart-hero-gradient text-white -mt-16 pt-28 pb-16 lg:pt-36 lg:pb-20">
+        <!-- Subtle Grid Overlay -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:linear-gradient(to_bottom,#000_50%,transparent_90%)] pointer-events-none"></div>
+
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Breadcrumbs -->
+            <nav class="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-4">
+                <a href="index.html" class="hover:text-white transition flex items-center gap-1">
+                    <span>Home</span>
+                </a>
+                <span>/</span>
+                <a href="books.html" class="hover:text-white transition">Books</a>
+                <span>/</span>
+                <span class="text-amber-300">Cart</span>
+            </nav>
+
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-indigo-300 mb-3">
+                        <span>🛒 Shopping Bag</span>
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span>0 Items</span>
+                    </div>
+                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight">
+                        Your Shopping Cart
+                    </h1>
+                    <p class="text-slate-300 mt-2 text-sm sm:text-base max-w-xl">
+                        Review your handpicked titles, adjust quantities, and complete your order with fast, secure checkout.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <a href="books.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/20 backdrop-blur-md transition shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                        </svg>
+                        <span>Continue Browsing</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Cart Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 -mt-6 sm:-mt-8 relative z-20 pb-20">
+        
+        
+            <!-- Empty Cart State -->
+            <div class="bg-white rounded-3xl shadow-xl shadow-gray-200/50 border border-gray-100 p-8 sm:p-16 text-center max-w-2xl mx-auto my-8">
+                <div class="w-24 h-24 mx-auto rounded-3xl bg-gradient-to-tr from-indigo-50 to-blue-50 border border-indigo-100 flex items-center justify-center text-4xl shadow-inner mb-6">
+                    📚
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
+                    Your Shopping Cart is Empty
+                </h2>
+                <p class="text-gray-500 mt-3 text-sm sm:text-base max-w-md mx-auto leading-relaxed">
+                    Looks like you haven't added any books to your cart yet. Discover bestselling literature, self-growth guides, and fiction classics.
+                </p>
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+                    <a href="books.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold shadow-lg shadow-indigo-500/25 transition transform active:scale-95 text-sm sm:text-base">
+                        <span>Explore All Books</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </a>
+                    <a href="category.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold text-sm transition">
+                        <span>Browse Categories</span>
+                    </a>
+                </div>
+            </div>
+        
+
+    </main>
+
+    <!-- Checkout Modal Dialog -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-gray-100 max-h-[92vh] overflow-y-auto">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg">
+                        🛍️
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-900">Complete Your Order</h3>
+                        <p class="text-xs text-gray-500">Instant dispatch to your address</p>
+                    </div>
+                </div>
+                <button type="button" id="close-checkout-modal-btn" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center font-bold text-sm transition">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Checkout Order Form -->
+            <form id="order-checkout-form" class="space-y-4 pt-5">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Full Name *</label>
+                    <input type="text" name="fullName" required placeholder="e.g. Rahul Sharma" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Phone Number *</label>
+                        <input type="tel" name="phone" required placeholder="+91 987456321" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Pincode *</label>
+                        <input type="text" name="pincode" required placeholder="e.g. 110001" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Shipping Address *</label>
+                    <textarea name="address" required rows="2" placeholder="House / Flat No., Street, Area, City" class="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 text-sm"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-2">Payment Method</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="border border-indigo-500 bg-indigo-50/50 rounded-xl p-3 flex items-center gap-2.5 cursor-pointer">
+                            <input type="radio" name="payment" value="cod" checked class="text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-xs font-bold text-gray-800">Cash on Delivery</span>
+                        </label>
+                        <label class="border border-gray-200 hover:border-gray-300 rounded-xl p-3 flex items-center gap-2.5 cursor-pointer">
+                            <input type="radio" name="payment" value="upi" class="text-indigo-600 focus:ring-indigo-500">
+                            <span class="text-xs font-bold text-gray-800">UPI / QR Pay</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Order Total Summary Box -->
+                <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200 flex items-center justify-between mt-2">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">0 Books in Order</p>
+                        <p class="text-sm font-bold text-gray-900">Total Payable Amount</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-black text-indigo-600">
+                            ₹70
+                        </p>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-base shadow-lg shadow-emerald-500/30 transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Place Order Now</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Order Success Confirmation View (Hidden by default) -->
+            <div id="order-success-view" class="hidden text-center py-6 space-y-4">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl animate-bounce shadow-md shadow-emerald-500/20">
+                    ✓
+                </div>
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase tracking-wider mb-2 border border-emerald-300">
+                        <span>🛡️</span> Payment Successful
+                    </span>
+                    <h3 class="text-2xl font-black text-gray-900">Order Placed Successfully!</h3>
+                </div>
+                <p class="text-sm text-gray-600 max-w-sm mx-auto">
+                    Your order has been saved and is now being processed. Redirecting to your live order tracking...
+                </p>
+                <div class="pt-4 flex flex-col gap-2.5">
+                    <a href="orders.html" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/30 transition flex items-center justify-center gap-2">
+                        <span>📦</span>
+                        <span>Track Order in My Orders</span>
+                        <span>→</span>
+                    </a>
+                    <a href="books.html" class="w-full py-2.5 text-xs text-gray-600 font-semibold hover:text-gray-900">
+                        Continue Shopping More Books
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 mt-20 border-t border-slate-900">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="md:col-span-2 space-y-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20">
+                        📚
+                    </div>
+                    <span class="text-xl font-extrabold text-white">BookStore</span>
+                </div>
+                <p class="text-sm text-slate-400 max-w-sm">
+                    Your premier online sanctuary for bestselling books, self-growth literature, fantasy epics, and timeless academic classics.
+                </p>
+                <div class="flex gap-4 pt-2">
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">IG</span>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">FB</span>
+                    </a>
+                    <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                        <span class="text-xs font-bold">X</span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+                <ul class="space-y-2.5 text-sm">
+                    <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                    <li><a href="books.html" class="hover:text-white transition">All Books</a></li>
+                    <li><a href="category.html" class="hover:text-white transition">Categories</a></li>
+                    <li><a href="cart.html" class="hover:text-white transition">Shopping Cart</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Support & About</h4>
+                <ul class="space-y-2.5 text-sm">
+                    <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Shipping Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+            <p>© 2026 BookStore Inc. All rights reserved.</p>
+            <p>Designed for passionate readers.</p>
+        </div>
+    </div>
+</footer>
+
+    <script>
+        // Modal interaction controls
+        const checkoutModal = document.getElementById('checkout-modal');
+        const openBtn = document.getElementById('open-checkout-modal-btn');
+        const closeBtn = document.getElementById('close-checkout-modal-btn');
+        const orderForm = document.getElementById('order-checkout-form');
+        const successView = document.getElementById('order-success-view');
+
+        if (openBtn && checkoutModal) {
+            openBtn.addEventListener('click', () => {
+                checkoutModal.classList.remove('hidden');
+            });
+        }
+
+        const closeModal = () => {
+            if (checkoutModal) checkoutModal.classList.add('hidden');
+        };
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+        if (checkoutModal) {
+            checkoutModal.addEventListener('click', (e) => {
+                if (e.target === checkoutModal) closeModal();
+            });
+        }
+
+        if (orderForm) {
+            orderForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = orderForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span>Saving Order...</span>';
+                }
+
+                const formData = new FormData(orderForm);
+                const orderData = {
+                    fullName: formData.get('fullName'),
+                    phone: formData.get('phone'),
+                    pincode: formData.get('pincode'),
+                    address: formData.get('address'),
+                    payment: formData.get('payment')
+                };
+
+                try {
+                    const response = await fetch('/checkout', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                    });
+                    const resJson = await response.json();
+                    
+                    orderForm.classList.add('hidden');
+                    if (successView) successView.classList.remove('hidden');
+
+                    // Auto redirect to My Orders after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/orders';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Error saving order:', err);
+                    orderForm.classList.add('hidden');
+                    if (successView) successView.classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = '/orders';
+                    }, 2000);
+                }
+            });
+        }
+    </script>
+<script src="./store.js"></script></body>
+</html>
