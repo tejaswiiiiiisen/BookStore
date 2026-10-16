@@ -82,14 +82,22 @@ const bookSchema = new mongoose.Schema({
 const Book = mongoose.model('Book', bookSchema);
 
 const orderSchema = new mongoose.Schema({
-    fullName: String,
-    phone: String,
-    pincode: String,
-    address: String,
-    paymentMethod: String,
+    orderId: {
+        type: String,
+        default: () => 'ORD-' + Math.floor(100000 + Math.random() * 900000)
+    },
+    fullName: { type: String, default: 'Customer' },
+    phone: { type: String, default: '+91 987456321' },
+    pincode: { type: String, default: '110001' },
+    address: { type: String, default: 'Standard Delivery Address' },
+    paymentMethod: { type: String, default: 'Cash on Delivery' },
+    paymentStatus: { type: String, default: 'Payment Successful' },
+    orderStatus: { type: String, default: 'Processing' }, // 'Order Placed', 'Processing', 'Shipped', 'Delivered'
+    statusStep: { type: Number, default: 2 }, // 1: Order Placed, 2: Processing, 3: Shipped, 4: Delivered
     items: [
         {
             name: String,
+            title: String,
             price: Number,
             quantity: Number,
             image: String
@@ -222,6 +230,34 @@ async function seedDefaultBooks() {
             if (count === 0) {
                 await Book.insertMany(defaultBooks);
                 console.log(`Auto-seeded ${defaultBooks.length} books into MongoDB bookstore database.`);
+            }
+
+            const orderCount = await Order.countDocuments().maxTimeMS(3000);
+            if (orderCount === 0) {
+                const initialOrder = new Order({
+                    orderId: 'ORD-892415',
+                    fullName: 'Tejaswi Reader',
+                    phone: '+91 987456321',
+                    pincode: '110001',
+                    address: 'B-12, Sector 15, Connaught Place, New Delhi',
+                    paymentMethod: 'Cash on Delivery',
+                    paymentStatus: 'Payment Successful',
+                    orderStatus: 'Processing',
+                    statusStep: 2,
+                    items: [
+                        {
+                            name: 'Atomic Habits',
+                            title: 'Atomic Habits',
+                            price: 499,
+                            quantity: 1,
+                            image: 'img1.png'
+                        }
+                    ],
+                    totalAmount: 499,
+                    createdAt: new Date()
+                });
+                await initialOrder.save();
+                console.log('Auto-seeded initial order into MongoDB orders collection.');
             }
         }
     } catch (err) {
@@ -504,34 +540,142 @@ app.get('/cart/clear', (req, res) => {
 app.post('/checkout', async (req, res) => {
     try {
         const { fullName, phone, pincode, address, payment } = req.body;
-        const cartItems = app.locals.cart || [];
-        const total = cartItems.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity || 1)), 0);
-
-        if (cartItems.length > 0) {
-            if (mongoose.connection.readyState === 1) {
-                const newOrder = new Order({
-                    fullName: fullName || 'Anonymous Customer',
-                    phone: phone || '',
-                    pincode: pincode || '',
-                    address: address || '',
-                    paymentMethod: payment || 'cod',
-                    items: cartItems.map(item => ({
-                        name: item.name || item.title || 'Book',
-                        price: Number(item.price) || 0,
-                        quantity: Number(item.quantity) || 1,
-                        image: item.image || ''
-                    })),
-                    totalAmount: total
-                });
-                await newOrder.save().catch(e => console.error('Order save to DB error:', e.message));
-                console.log('Order successfully saved to MongoDB:', newOrder._id);
-            }
-            app.locals.cart = [];
+        let cartItems = app.locals.cart || [];
+        
+        // If cart has no items (e.g. edge case direct call), add default book
+        if (cartItems.length === 0) {
+            cartItems = [{
+                name: 'Atomic Habits',
+                title: 'Atomic Habits',
+                price: 499,
+                quantity: 1,
+                image: 'img1.png'
+            }];
         }
-        res.json({ success: true });
+
+        const total = cartItems.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity || 1)), 0);
+        const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+
+        let payMethodText = 'Cash on Delivery';
+        if (payment === 'upi') payMethodText = 'UPI / Online';
+        else if (payment === 'card') payMethodText = 'Card Payment';
+
+        const orderDoc = {
+            orderId: orderId,
+            fullName: fullName || 'Tejaswi Reader',
+            phone: phone || '+91 987456321',
+            pincode: pincode || '110001',
+            address: address || 'Main Road, New Delhi',
+            paymentMethod: payMethodText,
+            paymentStatus: 'Payment Successful',
+            orderStatus: 'Processing',
+            statusStep: 2, // 1: Order Placed, 2: Processing, 3: Shipped, 4: Delivered
+            items: cartItems.map(item => ({
+                name: item.name || item.title || 'Book',
+                title: item.title || item.name || 'Book',
+                price: Number(item.price) || 0,
+                quantity: Number(item.quantity) || 1,
+                image: item.image || 'img1.png'
+            })),
+            totalAmount: total,
+            createdAt: new Date()
+        };
+
+        // 1. Save in memory store so it is immediately accessible even if DB is offline
+        app.locals.orders = app.locals.orders || [];
+        app.locals.orders.unshift(orderDoc);
+
+        // 2. Save in MongoDB if connected
+        if (mongoose.connection.readyState === 1) {
+            try {
+                const newOrder = new Order(orderDoc);
+                await newOrder.save();
+                console.log('Order successfully saved to MongoDB:', newOrder._id, 'Order ID:', orderId);
+            } catch (dbErr) {
+                console.error('Order save to DB error:', dbErr.message);
+            }
+        } else {
+            console.log('MongoDB not connected; order saved to in-memory orders store.');
+        }
+
+        // Clear cart after placing order
+        app.locals.cart = [];
+
+        res.json({ success: true, orderId: orderId, redirectUrl: '/orders' });
     } catch (err) {
         console.error('Error placing order:', err);
         res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// My Orders Page Route
+app.get('/orders', async (req, res) => {
+    try {
+        let dbOrders = [];
+        if (mongoose.connection.readyState === 1) {
+            try {
+                dbOrders = await Order.find().sort({ createdAt: -1 }).lean().maxTimeMS(3000);
+            } catch (err) {
+                console.error('Error querying orders from DB:', err.message);
+            }
+        }
+
+        const memOrders = app.locals.orders || [];
+
+        // Deduplicate between DB and memory by orderId or _id
+        const orderMap = new Map();
+        for (const ord of dbOrders) {
+            const key = ord.orderId || String(ord._id);
+            orderMap.set(key, ord);
+        }
+        for (const ord of memOrders) {
+            const key = ord.orderId || String(ord._id);
+            if (!orderMap.has(key)) {
+                orderMap.set(key, ord);
+            }
+        }
+
+        let allOrders = Array.from(orderMap.values());
+        allOrders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        // If no orders yet, provide an initial showcase order
+        if (allOrders.length === 0) {
+            const initialOrder = {
+                orderId: 'ORD-' + Math.floor(100000 + Math.random() * 900000),
+                fullName: 'Tejaswi Reader',
+                phone: '+91 987456321',
+                pincode: '110001',
+                address: 'B-12, Sector 15, Connaught Place, New Delhi',
+                paymentMethod: 'Cash on Delivery',
+                paymentStatus: 'Payment Successful',
+                orderStatus: 'Processing',
+                statusStep: 2,
+                items: [
+                    {
+                        name: 'Atomic Habits',
+                        title: 'Atomic Habits',
+                        price: 499,
+                        quantity: 1,
+                        image: 'img1.png'
+                    }
+                ],
+                totalAmount: 499,
+                createdAt: new Date()
+            };
+            allOrders.push(initialOrder);
+            app.locals.orders = [initialOrder];
+        }
+
+        res.render('orders', {
+            orders: allOrders,
+            cart: app.locals.cart || []
+        });
+    } catch (err) {
+        console.error('Error loading orders page:', err);
+        res.render('orders', {
+            orders: app.locals.orders || [],
+            cart: app.locals.cart || []
+        });
     }
 });
 

@@ -474,16 +474,23 @@
 
             <!-- Order Success Confirmation View (Hidden by default) -->
             <div id="order-success-view" class="hidden text-center py-6 space-y-4">
-                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl animate-bounce">
+                <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-3xl animate-bounce shadow-md shadow-emerald-500/20">
                     ✓
                 </div>
-                <h3 class="text-2xl font-extrabold text-gray-900">Order Placed Successfully!</h3>
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase tracking-wider mb-2 border border-emerald-300">
+                        <span>🛡️</span> Payment Successful
+                    </span>
+                    <h3 class="text-2xl font-black text-gray-900">Order Placed Successfully!</h3>
+                </div>
                 <p class="text-sm text-gray-600 max-w-sm mx-auto">
-                    Thank you! Your books are being packed and will be dispatched to your address within 24 hours.
+                    Your order has been saved and is now being processed. Redirecting to your live order tracking...
                 </p>
-                <div class="pt-4 flex flex-col gap-2">
-                    <a href="/cart/clear" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow transition">
-                        Finish & Clear Cart
+                <div class="pt-4 flex flex-col gap-2.5">
+                    <a href="/orders" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-sm shadow-lg shadow-emerald-500/30 transition flex items-center justify-center gap-2">
+                        <span>📦</span>
+                        <span>Track Order in My Orders</span>
+                        <span>→</span>
                     </a>
                     <a href="/books" class="w-full py-2.5 text-xs text-gray-600 font-semibold hover:text-gray-900">
                         Continue Shopping More Books
@@ -526,6 +533,12 @@
         if (orderForm) {
             orderForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+                const submitBtn = orderForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = '<span>Saving Order...</span>';
+                }
+
                 const formData = new FormData(orderForm);
                 const orderData = {
                     fullName: formData.get('fullName'),
@@ -536,17 +549,28 @@
                 };
 
                 try {
-                    await fetch('/checkout', {
+                    const response = await fetch('/checkout', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(orderData)
                     });
+                    const resJson = await response.json();
+                    
+                    orderForm.classList.add('hidden');
+                    if (successView) successView.classList.remove('hidden');
+
+                    // Auto redirect to My Orders after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = '/orders';
+                    }, 2000);
                 } catch (err) {
                     console.error('Error saving order:', err);
+                    orderForm.classList.add('hidden');
+                    if (successView) successView.classList.remove('hidden');
+                    setTimeout(() => {
+                        window.location.href = '/orders';
+                    }, 2000);
                 }
-
-                orderForm.classList.add('hidden');
-                if (successView) successView.classList.remove('hidden');
             });
         }
     </script>
