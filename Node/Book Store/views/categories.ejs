@@ -77,12 +77,13 @@
         %>
 
         <!-- Category Filter Pills -->
-        <div class="mb-10 flex flex-wrap gap-2.5 justify-center">
+        <div id="category-filter-pills" class="mb-10 flex flex-wrap gap-2.5 justify-center">
             <% categoryLinks.forEach(cat => { %>
                 <% const href = cat === 'All' ? '/category' : `/category/${encodeURIComponent(cat)}`; %>
                 <% const isActive = selectedCategory.toLowerCase() === cat.toLowerCase(); %>
                 <a href="<%= href %>"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs <%= isActive ? 'bg-indigo-600 text-white shadow-indigo-500/20 scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600' %>">
+                   data-category="<%= cat %>"
+                   class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs <%= isActive ? 'bg-indigo-600 text-white shadow-indigo-500/20 scale-105' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600' %>">
                     <%= cat %>
                 </a>
             <% }) %>
@@ -90,9 +91,9 @@
 
         <!-- Books Grid for Categories -->
         <% if (books && books.length) { %>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div id="category-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <% books.forEach(book => { %>
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="<%= book.category || 'General' %>">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="/<%= book.image %>"

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
@@ -62,7 +62,7 @@
             <div class="hidden md:flex items-center gap-1 font-semibold text-sm text-slate-200">
                 <a href="index.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Home</a>
                 <a href="books.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Books</a>
-                <a href="category.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Categories</a>
+                <a href="category.html" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/25">Categories</a>
                 <a href="about.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">About</a>
                 <a href="orders.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition flex items-center gap-1.5 text-amber-300 hover:text-amber-200">
                     <span>📦</span>
@@ -164,7 +164,7 @@
     <div class="md:hidden flex items-center justify-around border-t border-white/10 py-2.5 px-3 bg-[#171936]/60 backdrop-blur-xl text-xs font-semibold text-slate-200">
         <a href="index.html" class="hover:text-white py-1">Home</a>
         <a href="books.html" class="hover:text-white py-1">Books</a>
-        <a href="category.html" class="hover:text-white py-1">Categories</a>
+        <a href="category.html" class="text-indigo-400 font-bold py-1">Categories</a>
         <a href="contact.html" class="hover:text-white py-1">Contact</a>
         <a href="orders.html" class="hover:text-amber-300 text-amber-200 py-1 font-bold">Orders</a>
         <a href="cart.html" class="hover:text-white py-1">Cart</a>
@@ -300,64 +300,41 @@
         
 
         <!-- Category Filter Pills -->
-        <div class="mb-10 flex flex-wrap gap-2.5 justify-center">
-            
-                
-                
-                <a href="category.html"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-indigo-600 text-white shadow-indigo-500/20 scale-105">
-                    All
-                </a>
-            
-                
-                
-                <a href="/category/Self%20learning"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    Self learning
-                </a>
-            
-                
-                
-                <a href="/category/Fantasy"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    Fantasy
-                </a>
-            
-                
-                
-                <a href="/category/Fiction"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    Fiction
-                </a>
-            
-                
-                
-                <a href="/category/Technology"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    Technology
-                </a>
-            
-                
-                
-                <a href="/category/Classic"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    Classic
-                </a>
-            
-                
-                
-                <a href="/category/History"
-                   class="px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600">
-                    History
-                </a>
-            
+        <div id="category-filter-pills" class="mb-10 flex flex-wrap gap-2.5 justify-center">
+            <button type="button" data-category="all"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-indigo-600 text-white shadow-indigo-500/20 scale-105 cursor-pointer">
+                All
+            </button>
+            <button type="button" data-category="Self learning"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                Self learning
+            </button>
+            <button type="button" data-category="Fantasy"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                Fantasy
+            </button>
+            <button type="button" data-category="Fiction"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                Fiction
+            </button>
+            <button type="button" data-category="Technology"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                Technology
+            </button>
+            <button type="button" data-category="Classic"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                Classic
+            </button>
+            <button type="button" data-category="History"
+               class="category-pill px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition shadow-xs bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-indigo-600 cursor-pointer">
+                History
+            </button>
         </div>
 
         <!-- Books Grid for Categories -->
-        
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div id="category-books-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img1.png"
@@ -409,7 +386,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img2.jpg"
@@ -461,7 +438,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Fantasy">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img3.png"
@@ -513,7 +490,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img4.png"
@@ -565,7 +542,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img5.png"
@@ -617,7 +594,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Fiction">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img6.png"
@@ -669,7 +646,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Fantasy">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img7.png"
@@ -721,7 +698,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Classic">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img8.png"
@@ -773,7 +750,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="History">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img9.png"
@@ -825,7 +802,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Technology">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img10.png"
@@ -877,7 +854,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img11.png"
@@ -929,7 +906,7 @@
 
                     </div>
                 
-                    <div class="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col">
+                    <div class="category-book-card bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xs hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col" data-category="Self learning">
                         
                         <div class="relative h-72 bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center p-5 overflow-hidden">
                             <img src="./img12.png"
@@ -981,8 +958,17 @@
 
                     </div>
                 
-            </div>
-        
+        </div>
+
+        <!-- No Books Found Empty State (hidden by default) -->
+        <div id="category-empty-state" class="hidden bg-white rounded-3xl border border-dashed border-gray-300 p-12 text-center text-gray-600 max-w-md mx-auto my-8">
+            <div class="text-4xl mb-3">📚</div>
+            <h3 class="text-lg font-bold text-gray-900">No books found in this category</h3>
+            <p class="text-xs text-gray-500 mt-1">Try exploring other categories or view all books in our catalog.</p>
+            <button type="button" onclick="window.filterCategory('all')" class="mt-5 px-5 py-2.5 rounded-xl bg-indigo-600 text-white text-xs font-bold shadow-md hover:bg-indigo-700 transition cursor-pointer">
+                View All Categories
+            </button>
+        </div>
 
     </main>
 
