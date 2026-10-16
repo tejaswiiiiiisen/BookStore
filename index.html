@@ -101,9 +101,9 @@
 
             <!-- Nav Links -->
             <div class="hidden md:flex items-center gap-1 font-semibold text-sm text-slate-200">
-                <a href="index.html" class="px-3.5 py-2 rounded-xl bg-indigo-600 text-white font-bold shadow-md shadow-indigo-500/25">Home</a>
+                <a href="index.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Home</a>
                 <a href="books.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Books</a>
-                <a href="category.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Categories</a>
+                <a href="category.html" onclick="window.location.href='category.html'; return true;" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">Categories</a>
                 <a href="about.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition">About</a>
                 <a href="orders.html" class="px-3.5 py-2 rounded-xl hover:text-white hover:bg-white/10 transition flex items-center gap-1.5 text-amber-300 hover:text-amber-200">
                     <span>📦</span>
@@ -203,14 +203,26 @@
 
     <!-- Mobile Navigation Subbar -->
     <div class="md:hidden flex items-center justify-around border-t border-white/10 py-2.5 px-3 bg-[#171936]/60 backdrop-blur-xl text-xs font-semibold text-slate-200">
-        <a href="index.html" class="text-indigo-400 font-bold py-1">Home</a>
+        <a href="index.html" class="hover:text-white py-1">Home</a>
         <a href="books.html" class="hover:text-white py-1">Books</a>
-        <a href="category.html" class="hover:text-white py-1">Categories</a>
+        <a href="category.html" onclick="window.location.href='category.html'; return true;" class="hover:text-white py-1">Categories</a>
         <a href="contact.html" class="hover:text-white py-1">Contact</a>
         <a href="orders.html" class="hover:text-amber-300 text-amber-200 py-1 font-bold">Orders</a>
         <a href="cart.html" class="hover:text-white py-1">Cart</a>
     </div>
 </nav>
+
+<script>
+    // Safeguard category link navigation against any stale cached scripts
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a');
+        if (!link) return;
+        const href = link.getAttribute('href') || '';
+        if (href === 'category.html' || href === '/category' || href.endsWith('/category.html')) {
+            window.location.href = 'category.html';
+        }
+    }, true);
+</script>
 
 <script>
     (function() {
@@ -372,7 +384,7 @@
                             </svg>
                         </a>
                         
-                        <a href="category.html" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-base border border-white/20 backdrop-blur-md hover:-translate-y-0.5 transition-all">
+                        <a href="category.html" onclick="window.location.href='category.html'; return true;" class="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-semibold text-base border border-white/20 backdrop-blur-md hover:-translate-y-0.5 transition-all">
                             <span>Browse Categories</span>
                             <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -382,18 +394,18 @@
 
                     <!-- Trust Metrics & Stats -->
                     <div class="pt-6 border-t border-white/10 grid grid-cols-3 gap-4 max-w-lg mx-auto lg:mx-0">
-                        <div>
+                        <div style="display: block !important;">
                             <div class="text-2xl sm:text-3xl font-extrabold text-white">15,000+</div>
                             <div class="text-xs sm:text-sm text-slate-400">Happy Readers</div>
                         </div>
-                        <div>
+                        <div style="display: block !important;">
                             <div class="text-2xl sm:text-3xl font-extrabold text-amber-300 flex items-center justify-center lg:justify-start gap-1">
                                 <span>4.9</span>
                                 <span class="text-lg">★</span>
                             </div>
                             <div class="text-xs sm:text-sm text-slate-400">Trust Rating</div>
                         </div>
-                        <div>
+                        <div style="display: block !important;">
                             <div class="text-2xl sm:text-3xl font-extrabold text-emerald-400">Free</div>
                             <div class="text-xs sm:text-sm text-slate-400">Delivery > ₹499</div>
                         </div>
@@ -1286,7 +1298,7 @@
                 <button type="button" data-filter="fantasy" class="category-pill px-4 py-2 rounded-xl text-xs sm:text-sm font-medium transition bg-white text-gray-700 border border-gray-200 hover:border-indigo-400 hover:text-indigo-600">
                     Fantasy
                 </button>
-                <a href="category.html" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
+                <a href="category.html" onclick="window.location.href='category.html'; return true;" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition flex items-center gap-1">
                     <span>All Categories</span>
                     <span>→</span>
                 </a>
@@ -2614,5 +2626,5 @@
         });
     </script>
 
-<script src="./store.js"></script></body>
+<script src="./store.js?v=20261016c"></script></body>
 </html>
