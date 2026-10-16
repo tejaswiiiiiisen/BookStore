@@ -1,22 +1,22 @@
- <div align="center">
+<div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=0:050816,45:102A56,100:0891B2&height=240&section=header&text=THE%20BOOK%20SHELF&fontSize=42&fontColor=FFFFFF&fontAlignY=42&desc=A%20UNIVERSE%20BETWEEN%20COVERS&descSize=15&descAlignY=65&animation=fadeIn" width="100%" alt="The Book Shelf"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:450A0A,50:DC2626,100:7F1D1D&height=240&section=header&text=THE%20BOOK%20SHELF&fontSize=42&fontColor=FFFFFF&fontAlignY=38&desc=A%20UNIVERSE%20BETWEEN%20COVERS&descSize=15&descAlignY=60&animation=fadeIn" width="100%" alt="BookStore Red Wave Header"/>
 
 <br/>
 
-<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=21&duration=3200&pause=900&color=38BDF8&center=true&vCenter=true&width=650&lines=Find+the+story+that+stays+with+you.;One+more+chapter.+One+new+world.;Your+next+great+read+is+waiting." alt="BookStore Typing Animation"/>
+<img src="https://readme-typing-svg.demolab.com?font=Georgia&size=21&duration=3200&pause=900&color=F87171&center=true&vCenter=true&width=650&lines=Find+the+story+that+stays+with+you.;One+more+chapter.+One+new+world.;Your+next+great+read+is+waiting." alt="BookStore Typing Animation"/>
 
 <br/><br/>
 
 <a href="https://bookstore-tc9v.onrender.com/">
-<img src="https://img.shields.io/badge/OPEN_THE_BOOKSHELF-38BDF8?style=for-the-badge&logo=bookstack&logoColor=06111F" alt="Open BookStore"/>
+<img src="https://img.shields.io/badge/OPEN_THE_BOOKSHELF-DC2626?style=for-the-badge&logo=bookstack&logoColor=white" alt="Open BookStore"/>
 </a>
 
 <br/><br/>
 
-<img src="https://img.shields.io/badge/CRAFTED_FOR-BOOK_LOVERS-0F172A?style=flat-square&labelColor=0F172A"/>
-<img src="https://img.shields.io/badge/WEB-EXPERIENCE-164E63?style=flat-square"/>
-<img src="https://img.shields.io/badge/STATUS-DEPLOYED-065F46?style=flat-square"/>
+<img src="https://img.shields.io/badge/CRAFTED_FOR-BOOK_LOVERS-450A0A?style=flat-square"/>
+<img src="https://img.shields.io/badge/WEB-EXPERIENCE-B91C1C?style=flat-square"/>
+<img src="https://img.shields.io/badge/STATUS-DEPLOYED-166534?style=flat-square"/>
 
 </div>
 
@@ -74,7 +74,7 @@ Designed to provide a convenient experience across supported screen sizes.
 ### Explore The BookStore
 
 <a href="https://bookstore-tc9v.onrender.com/">
-<img src="https://img.shields.io/badge/01__%E2%80%94__LIVE_PREVIEW-EXPLORE_NOW-0B2545?style=for-the-badge&labelColor=07111F" alt="Live Preview"/>
+<img src="https://img.shields.io/badge/01__%E2%80%94__LIVE_PREVIEW-EXPLORE_NOW-7F1D1D?style=for-the-badge&labelColor=450A0A" alt="Live Preview"/>
 </a>
 
 <br/><br/>
@@ -122,11 +122,11 @@ This project brings practical web development concepts to life through a modern 
 *Building digital experiences, one project at a time.*
 
 <a href="https://github.com/tejaswiiiiiisen">
-<img src="https://img.shields.io/badge/GITHUB-EXPLORE_MY_WORK-111827?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Profile"/>
+<img src="https://img.shields.io/badge/GITHUB-EXPLORE_MY_WORK-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Profile"/>
 </a>
 
 <a href="https://www.linkedin.com/in/tejaswi-sen/">
-<img src="https://img.shields.io/badge/LINKEDIN-LET'S_CONNECT-075985?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Profile"/>
+<img src="https://img.shields.io/badge/LINKEDIN-LET'S_CONNECT-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn Profile"/>
 </a>
 
 <br/><br/>
