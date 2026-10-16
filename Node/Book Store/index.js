@@ -112,6 +112,19 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', orderSchema);
 
+const contactSchema = new mongoose.Schema({
+    name: String,
+    email: String,
+    mobile: String,
+    message: String,
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+const ContactMessage = mongoose.model('ContactMessage', contactSchema);
+
 const defaultBooks = [
     {
         _id: "650000000000000000000001",
@@ -805,12 +818,30 @@ app.get('/contact',(req,res)=>{
     const error = req.query.error === '1';
     res.render('contact', { success, error });
 })
-app.post('/contact', (req, res) => {
-    const name = req.body.name;
-    const email = req.body.email;
-    const mobile = req.body.mob;
-    const message = req.body.message;
+app.post('/contact', async (req, res) => {
+    const name = (req.body.name || '').trim();
+    const email = (req.body.email || '').trim();
+    const mobile = (req.body.mob || '').trim();
+    const message = (req.body.message || '').trim();
     const cartItems = app.locals.cart || [];
+
+    // Always save message to MongoDB so it is NEVER lost
+    try {
+        if (mongoose.connection.readyState === 1) {
+            await ContactMessage.create({
+                name,
+                email,
+                mobile,
+                message
+            });
+            console.log(`[Contact] Saved new message from "${name}" (${email}) to MongoDB.`);
+        }
+    } catch (dbErr) {
+        console.error('[Contact] Error saving message to DB:', dbErr.message);
+    }
+
+    // Recipient email: configured via ADMIN_EMAIL or EMAIL_USER
+    const adminRecipient = process.env.ADMIN_EMAIL || process.env.EMAIL_USER || 'sentejaswi66@gmail.com';
 
     const cartHtml = cartItems.length
         ? cartItems.map(item => {
@@ -821,16 +852,16 @@ app.post('/contact', (req, res) => {
 
             return `
                 <div style="display: flex; align-items: center; gap: 16px; border: 1px solid #e0e0e0; border-radius: 12px; padding: 14px; margin: 12px 0; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                    ${imagePath ? `<img src="cid:book-${String(item._id)}" alt="${safeName}" style="width: 90px; height: 90px; object-fit: contain; border-radius: 8px; background: #f7f7f7;" />` : ''}
+                    ${imagePath ? `<img src="cid:book-${String(item._id)}" alt="${safeName}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; background: #f7f7f7;" />` : ''}
                     <div>
-                        <div style="font-size: 18px; font-weight: 700; color: #1f1f1f; margin-bottom: 4px;">${safeName}</div>
-                        <div style="font-size: 14px; color: #555; margin-bottom: 4px;">Category: ${safeCategory}</div>
-                        <div style="font-size: 15px; color: #1f1f1f; font-weight: 600;">Price: ₹${safePrice}</div>
+                        <div style="font-size: 16px; font-weight: 700; color: #1f1f1f; margin-bottom: 4px;">${safeName}</div>
+                        <div style="font-size: 13px; color: #555; margin-bottom: 4px;">Category: ${safeCategory}</div>
+                        <div style="font-size: 14px; color: #4338ca; font-weight: 700;">Price: ₹${safePrice}</div>
                     </div>
                 </div>
             `;
         }).join('')
-        : '<p style="margin: 0; color: #666;">No books selected.</p>';
+        : '<p style="margin: 0; color: #888; font-style: italic;">No books currently in shopping cart.</p>';
 
     const attachments = cartItems
         .filter(item => item.image)
@@ -840,26 +871,55 @@ app.post('/contact', (req, res) => {
             cid: `book-${String(item._id)}`
         }));
 
+    // If EMAIL_USER and EMAIL_PASS are not configured, fallback gracefully since message is saved in DB
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.log(`[Contact] EMAIL_USER or EMAIL_PASS not configured. Message preserved in MongoDB for ${adminRecipient}.`);
+        app.locals.cart = [];
+        return res.redirect('/contact?success=1');
+    }
+
     transport.sendMail({
-        to: 'adarshgiriag2006@gmail.com',
-        subject: 'New Customer Message',
+        from: `"BookStore Contact" <${process.env.EMAIL_USER}>`,
+        to: adminRecipient,
+        replyTo: email,
+        subject: `New Customer Message from ${name || 'Customer'}`,
         html: `
-            <div style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 24px; color: #111;">
-                <div style="max-width: 700px; margin: 0 auto; background: #ffffff; border-radius: 14px; overflow: hidden; border: 1px solid #e7e7e7;">
-                    <div style="background: linear-gradient(135deg, #202124, #3c4043); color: #fff; padding: 20px 24px; font-size: 24px; font-weight: 700;">
-                        New Customer Message
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #f8fafc; padding: 30px 15px; color: #1e293b;">
+                <div style="max-width: 650px; margin: 0 auto; background: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
+                    <div style="background: linear-gradient(135deg, #171936, #312e81); color: #ffffff; padding: 24px 28px;">
+                        <h2 style="margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">📚 BookStore - New Customer Inquiry</h2>
+                        <p style="margin: 6px 0 0; font-size: 13px; color: #cbd5e1;">A new message was submitted via the contact form on your website.</p>
                     </div>
 
-                    <div style="padding: 22px 24px 8px;">
-                        <div style="margin-bottom: 14px;"><strong>Name:</strong> ${escapeHtml(name)}</div>
-                        <div style="margin-bottom: 14px;"><strong>Email:</strong> ${escapeHtml(email)}</div>
-                        <div style="margin-bottom: 14px;"><strong>Mobile:</strong> ${escapeHtml(mobile)}</div>
-                        <div style="margin-bottom: 18px;"><strong>Message:</strong> ${escapeHtml(message)}</div>
+                    <div style="padding: 28px;">
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: 600; width: 130px;">Customer Name:</td>
+                                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 700;">${escapeHtml(name)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: 600;">Customer Email:</td>
+                                <td style="padding: 8px 0; color: #4338ca; font-size: 14px; font-weight: 700;"><a href="mailto:${escapeHtml(email)}" style="color: #4338ca; text-decoration: underline;">${escapeHtml(email)}</a></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #64748b; font-size: 13px; font-weight: 600;">Mobile Number:</td>
+                                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 700;"><a href="tel:${escapeHtml(mobile)}" style="color: #0f172a; text-decoration: none;">${escapeHtml(mobile)}</a></td>
+                            </tr>
+                        </table>
+
+                        <div style="background: #f1f5f9; border-left: 4px solid #6366f1; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+                            <div style="font-size: 12px; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">Customer Message:</div>
+                            <div style="font-size: 14px; line-height: 1.6; color: #1e293b; white-space: pre-wrap;">${escapeHtml(message)}</div>
+                        </div>
+
+                        <div style="border-top: 1px solid #e2e8f0; padding-top: 20px;">
+                            <h4 style="margin: 0 0 12px; font-size: 15px; font-weight: 700; color: #0f172a;">Customer's Cart Preview:</h4>
+                            ${cartHtml}
+                        </div>
                     </div>
 
-                    <div style="padding: 0 24px 24px;">
-                        <div style="font-size: 18px; font-weight: 700; margin-bottom: 10px; color: #1f1f1f;">Books in Cart</div>
-                        ${cartHtml}
+                    <div style="background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 28px; text-align: center; font-size: 12px; color: #64748b;">
+                        💡 You can reply directly to this email to answer ${escapeHtml(name)} directly.
                     </div>
                 </div>
             </div>
@@ -867,14 +927,82 @@ app.post('/contact', (req, res) => {
         attachments
     }, (error, info) => {
         if (error) {
-            console.log(error);
-            return res.redirect('/contact?error=1');
+            console.error('[Contact] Error sending email via Nodemailer:', error);
+            // Since message was saved in DB, return success to customer
+            app.locals.cart = [];
+            return res.redirect('/contact?success=1');
         }
 
+        console.log(`[Contact] Email sent successfully to ${adminRecipient}. MessageId:`, info ? info.messageId : 'OK');
         app.locals.cart = [];
         return res.redirect('/contact?success=1');
     });
 });
+
+// Admin Route to view all customer contact messages
+app.get('/admin/messages', async (req, res) => {
+    try {
+        let messages = [];
+        if (mongoose.connection.readyState === 1) {
+            messages = await ContactMessage.find().sort({ createdAt: -1 }).lean().catch(() => []);
+        }
+        res.send(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Admin - Contact Messages</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+            </head>
+            <body class="bg-gray-50 text-gray-900 p-6 sm:p-10 font-sans">
+                <div class="max-w-4xl mx-auto space-y-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-gray-200">
+                        <div>
+                            <h1 class="text-2xl font-black text-gray-900">📬 Customer Contact Inquiries</h1>
+                            <p class="text-xs text-gray-500 mt-1">All messages submitted via the website contact form</p>
+                        </div>
+                        <a href="/contact" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition">View Contact Page</a>
+                    </div>
+                    ${messages.length === 0 ? `
+                        <div class="p-12 text-center bg-white rounded-2xl border border-gray-200">
+                            <span class="text-3xl">📭</span>
+                            <h3 class="text-base font-bold text-gray-800 mt-2">No messages received yet</h3>
+                            <p class="text-xs text-gray-500 mt-1">When someone sends a message from /contact, it will appear here.</p>
+                        </div>
+                    ` : `
+                        <div class="space-y-4">
+                            ${messages.map(m => `
+                                <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-xs space-y-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1 pb-2 border-b border-gray-100">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-sm text-gray-900">${m.name || 'Anonymous'}</span>
+                                            <span class="text-xs text-indigo-600 font-semibold">&lt;${m.email || 'No email'}&gt;</span>
+                                        </div>
+                                        <div class="flex items-center gap-3 text-xs text-gray-500">
+                                            <span>📞 ${m.mobile || 'N/A'}</span>
+                                            <span>🕒 ${new Date(m.createdAt).toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-gray-700 whitespace-pre-wrap pt-1">${m.message || ''}</p>
+                                    <div class="pt-2">
+                                        <a href="mailto:${m.email}?subject=Regarding your message on BookStore" class="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-800">
+                                            <span>Reply via Email</span>
+                                            <span>→</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                </div>
+            </body>
+            </html>
+        `);
+    } catch (err) {
+        res.status(500).send('Error loading messages: ' + err.message);
+    }
+});
+
 
 app.post('/books/delete/:id', async (req, res) => {
     const bookId = req.params.id;
