@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found - BookStore</title>
+    <script>
+        (function() {
+            const path = window.location.pathname.toLowerCase();
+            const search = window.location.search || '';
+            
+            // Base path calculation for GitHub Pages repo subpath
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const repoBase = isGitHubPages ? '/BookStore/' : '/';
+
+            if (path.includes('logout')) {
+                window.location.replace(repoBase + 'login.html?logged_out=1');
+            } else if (path.includes('login')) {
+                window.location.replace(repoBase + 'login.html' + search);
+            } else if (path.includes('categor')) {
+                window.location.replace(repoBase + 'category.html');
+            } else if (path.includes('book')) {
+                window.location.replace(repoBase + 'books.html');
+            } else if (path.includes('cart')) {
+                window.location.replace(repoBase + 'cart.html');
+            } else if (path.includes('order')) {
+                window.location.replace(repoBase + 'orders.html');
+            }
+        })();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#171936] text-white min-h-screen flex items-center justify-center p-6 text-center">
+    <div class="max-w-md w-full bg-slate-900/80 border border-white/10 rounded-3xl p-8 backdrop-blur-xl shadow-2xl">
+        <div class="text-6xl font-black text-indigo-400 mb-4">404</div>
+        <h1 class="text-2xl font-bold mb-2">Page Not Found</h1>
+        <p class="text-slate-400 text-sm mb-6">The page you were looking for doesn't exist or has moved.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="index.html" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-sm text-white transition">Go to Home</a>
+            <a href="login.html" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-bold text-sm text-slate-200 transition">Sign In</a>
+        </div>
+    </div>
+</body>
+</html>

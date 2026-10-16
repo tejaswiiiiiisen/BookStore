@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - BookStore</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hero-gradient-canvas {
+            background-color: #171936;
+            background-image: 
+                radial-gradient(ellipse 75% 55% at 75% 20%, rgba(57, 32, 111, 0.45) 0%, transparent 70%),
+                radial-gradient(ellipse 65% 50% at 20% 15%, rgba(67, 56, 202, 0.25) 0%, transparent 65%),
+                linear-gradient(
+                    180deg,
+                    #171936 0%,
+                    #171936 40%,
+                    #1c204b 60%,
+                    #252d64 80%,
+                    #171936 100%
+                );
+        }
+        .card-glass {
+            background: rgba(23, 25, 54, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 40px rgba(99, 102, 241, 0.15);
+        }
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.55; transform: scale(1.08); }
+        }
+        .glow-pulse {
+            animation: pulse-subtle 7s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-[#171936] text-gray-100 min-h-screen flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- Floating Logout Confirmation Toast -->
+    <div id="logout-toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900/95 text-white border border-white/20 shadow-2xl backdrop-blur-xl">
+            <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base">✓</span>
+            <div>
+                <p class="text-xs font-bold text-white">Logged Out</p>
+                <p class="text-[11px] text-slate-400">You have been signed out successfully.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Login Viewport -->
+    <main class="relative flex-1 flex items-center justify-center px-4 py-16 sm:px-6 lg:px-8 hero-gradient-canvas overflow-hidden">
+        
+        <!-- Ambient Glowing Background Orbs -->
+        <div class="absolute -top-20 -left-20 w-96 h-96 bg-indigo-600/30 rounded-full blur-3xl glow-pulse pointer-events-none"></div>
+        <div class="absolute -bottom-20 -right-20 w-[450px] h-[450px] bg-purple-600/25 rounded-full blur-3xl glow-pulse pointer-events-none" style="animation-delay: 2.5s;"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Subtle Grid Pattern -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff08_1px,transparent_1px),linear-gradient(to_bottom,#ffffff08_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none"></div>
+
+        <div class="relative w-full max-w-md z-10">
+
+            <!-- Login Card -->
+            <div class="card-glass rounded-3xl p-6 sm:p-8">
+
+                <!-- Header Title & Logo -->
+                <div class="text-center mb-6">
+                    <a href="index.html" class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-blue-500 text-white shadow-lg shadow-indigo-500/30 mb-3 border border-white/20 hover:scale-105 transition-transform">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </a>
+                    <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">Welcome Back</h2>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Sign in to access your orders, cart, and personalized reading list</p>
+                </div>
+
+                <!-- Login Form -->
+                <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-4">
+
+                    <!-- Username Field -->
+                    <div>
+                        <label for="username" class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">
+                            Username or Email
+                        </label>
+                        <div class="relative flex items-center">
+                            <div class="absolute left-3.5 text-slate-400 pointer-events-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                value="tejaswi"
+                                placeholder="Enter username or email" 
+                                required
+                                class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-900/80 border border-white/15 text-white placeholder-slate-400 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 focus:outline-none transition shadow-inner"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password Field with Show/Hide toggle -->
+                    <div>
+                        <div class="flex items-center justify-between mb-1.5">
+                            <label for="password" class="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                                Password
+                            </label>
+                            <a href="#" class="text-[11px] font-semibold text-indigo-300 hover:text-white transition">Forgot password?</a>
+                        </div>
+                        <div class="relative flex items-center">
+                            <div class="absolute left-3.5 text-slate-400 pointer-events-none">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                value="password123"
+                                placeholder="Enter your password" 
+                                required
+                                class="w-full pl-10 pr-11 py-2.5 rounded-xl bg-slate-900/80 border border-white/15 text-white placeholder-slate-400 text-sm focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/30 focus:outline-none transition shadow-inner"
+                            >
+                            <!-- Show/Hide Toggle -->
+                            <button 
+                                type="button" 
+                                id="toggle-password-btn" 
+                                class="absolute right-3 text-slate-400 hover:text-white transition cursor-pointer p-1"
+                                title="Show / Hide Password"
+                                aria-label="Toggle password visibility">
+                                <svg id="eye-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Remember Me Option -->
+                    <div class="flex items-center pt-1">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" checked class="w-4 h-4 rounded border-white/20 bg-slate-900/80 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-0">
+                            <span class="text-xs text-slate-300">Remember this device</span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Login Button -->
+                    <button 
+                        type="submit" 
+                        id="submit-login-btn"
+                        class="w-full mt-2 py-3 px-4 rounded-xl bg-gradient-to-r from-indigo-500 via-indigo-600 to-blue-600 hover:from-indigo-600 hover:to-blue-700 active:scale-98 text-white font-black text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
+                        <span>Sign In to Bookstore</span>
+                        <span>→</span>
+                    </button>
+                </form>
+
+                <!-- Footer Sign up text -->
+                <div class="mt-6 text-center text-xs text-slate-400">
+                    <span>New to BookStore?</span>
+                    <a href="index.html" class="font-bold text-indigo-300 hover:text-white transition ml-1">
+                        Create an account
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 border-t border-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex items-center gap-2">
+                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-500 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-500/20">
+                            📚
+                        </div>
+                        <span class="text-xl font-extrabold text-white">BookStore</span>
+                    </div>
+                    <p class="text-sm text-slate-400 max-w-sm">
+                        Your premier online sanctuary for bestselling books, self-growth literature, fantasy epics, and timeless academic classics.
+                    </p>
+                    <div class="flex gap-4 pt-2">
+                        <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                            <span class="text-xs font-bold">IG</span>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                            <span class="text-xs font-bold">FB</span>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-lg bg-slate-900 hover:bg-indigo-600 hover:text-white flex items-center justify-center text-slate-400 transition">
+                            <span class="text-xs font-bold">X</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Quick Links</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+                        <li><a href="books.html" class="hover:text-white transition">All Books</a></li>
+                        <li><a href="category.html" class="hover:text-white transition">Categories</a></li>
+                        <li><a href="cart.html" class="hover:text-white transition">Shopping Cart</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Support & About</h4>
+                    <ul class="space-y-2.5 text-sm">
+                        <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-white transition">Shipping Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-900 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                <p>© 2026 BookStore Inc. All rights reserved.</p>
+                <p>Designed for passionate readers.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Client-Side Toggle Password & Toast Script -->
+    <script>
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            // Redirect smoothly to homepage with logged_in=1 indicator
+            window.location.href = 'index.html?logged_in=1';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const passwordInput = document.getElementById('password');
+            const togglePasswordBtn = document.getElementById('toggle-password-btn');
+            const eyeIcon = document.getElementById('eye-icon');
+
+            // Toggle Password Visibility
+            if (togglePasswordBtn && passwordInput) {
+                togglePasswordBtn.addEventListener('click', () => {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    if (isPassword) {
+                        eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"></path>`;
+                    } else {
+                        eyeIcon.innerHTML = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>`;
+                    }
+                });
+            }
+
+            // Show toast if redirected after logout
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('logged_out') || window.location.href.includes('logged_out')) {
+                const toast = document.getElementById('logout-toast');
+                if (toast) {
+                    toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+                    toast.classList.add('translate-y-0', 'opacity-100');
+                    setTimeout(() => {
+                        toast.classList.remove('translate-y-0', 'opacity-100');
+                        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+                    }, 3500);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
