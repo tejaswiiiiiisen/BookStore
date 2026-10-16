@@ -35,22 +35,8 @@ function saveCart(cart) {
 
 function getOrders() {
     try {
-        return JSON.parse(localStorage.getItem(ORDERS_KEY)) || [
-            {
-                orderId: 'ORD-892415',
-                fullName: 'Tejaswi Sen',
-                phone: '+91 987456321',
-                address: 'B-12, Sector 15, Connaught Place, New Delhi',
-                paymentMethod: 'Cash on Delivery',
-                createdAt: 'Today',
-                status: 'Processing',
-                statusStep: 2,
-                totalAmount: 499,
-                items: [
-                    { title: 'Atomic Habits', price: 499, quantity: 1, image: 'img1.png' }
-                ]
-            }
-        ];
+        const stored = localStorage.getItem(ORDERS_KEY);
+        return stored ? JSON.parse(stored) : [];
     } catch (e) {
         return [];
     }
@@ -426,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const path = window.location.pathname;
     if (path.endsWith('cart.html') || path.endsWith('cart')) {
         renderCartPage();
-    } else if (path.endsWith('orders.html') || path.endsWith('orders')) {
-        renderOrdersPage();
     }
+    // orders.html is pre-rendered with the rich multi-card design matching the screenshot.
+    // Do NOT overwrite it with a generic template.
 });
